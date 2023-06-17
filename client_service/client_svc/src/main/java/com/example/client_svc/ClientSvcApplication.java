@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ClientSvcApplication {
 
 	static final String topicExchangeName = "eo-exchange";
-
 	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(ClientSvcApplication.class, args);
 	}
