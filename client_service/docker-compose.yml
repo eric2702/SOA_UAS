@@ -1,0 +1,58 @@
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - EONet
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+  client_sql:
+    image: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./client_sql/:/docker-entrypoint-initdb.d
+    networks:
+      - ClientNet
+  client_svc:
+    build: ./client_svc
+    image: client_svc
+    ports:
+      - 8080:8080
+    volumes:
+      - ./client_svc:/client_svc
+    networks:
+      - EONet
+      - ClientNet
+    depends_on:
+      client_sql:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+  client_cons:
+    build: ./client_cons
+    image: client_cons
+    ports:
+      - 8081:8081
+    volumes:
+      - ./client_cons:/client_cons
+    networks:
+      - EONet
+      - ClientNet
+    depends_on:
+      client_sql:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      client_svc:
+        condition: service_started
+
+networks:
+  EONet:
+  ClientNet:

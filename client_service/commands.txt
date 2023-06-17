@@ -1,0 +1,5 @@
+masuk ke setiap project spring boot and build the jar files with command:
+./mvnw clean package -DskipTests
+
+terus:
+docker-compose up --build di root folder
