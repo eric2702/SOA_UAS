@@ -1,0 +1,43 @@
+services:
+  login_sql:
+    image: mysql
+    ports:
+      - 3310:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./login_sql/:/docker-entrypoint-initdb.d
+    networks:
+      - LoginNet
+  login_cons:
+    build: ./login_cons
+    image: login_cons
+    ports:
+      - 8089:8089
+    volumes:
+      - ./login_cons:/login_cons
+    networks:
+      - EONet
+      - LoginNet
+    depends_on:
+      login_sql:
+        condition: service_started
+      login_svc:
+        condition: service_started
+  login_svc:
+    build: ./login_svc
+    image: login_svc
+    ports:
+      - 8088:8088
+    volumes:
+      - ./login_svc:/login_svc
+    networks:
+      - EONet
+      - LoginNet
+    depends_on:
+      login_sql:
+        condition: service_started
+networks:
+  EONet:
+    external: true
+  LoginNet:

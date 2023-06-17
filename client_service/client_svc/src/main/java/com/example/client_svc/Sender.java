@@ -1,7 +1,6 @@
 package com.example.client_svc;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Component;
 import com.example.client_svc.models.entities.Client;
 import com.example.client_svc.models.repos.ClientRepository;
 import com.example.client_svc.services.ClientService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 @Component
@@ -38,32 +37,49 @@ public class Sender implements CommandLineRunner {
         System.out.println("Sending message...");
     }
 
-    @GetMapping("/send/{message}")
-    public String sendMessage(@PathVariable String message) {
-        System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", message);
-        return "Message sent: " + message;
-    }
-
     @PostMapping("/client/register")
     public Client addClient(@RequestBody Client client) {
         System.out.println("Sending message...");
-        // check if client already exists
+
         Client clientExists = clientRepository.findClientByEmail(client.getEmail());
         if (clientExists != null) {
             return clientExists;
         }
-        // convert client to json
-        Client new_client = clientService.addClient(client);
+        Client newClient = clientService.addClient(client);
+        String clientJson = convertClientToJson(newClient);
+        rabbitTemplate.convertAndSend(topicExchangeName, "client.new", clientJson);
 
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", new_client.toString());
+        return newClient;
+    }
 
-        return new_client;
+    private String convertClientToJson(Client client) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(client);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @PutMapping("/client/data")
     public Client updateClientData(@RequestBody Client client) {
-        return clientService.updateClientData(client);
+        Client existingClient = clientRepository.findById(client.getId()).orElse(null);
+        if (existingClient == null) {
+            throw new RuntimeException("Client not found");
+        }
+        Client clientExists = clientRepository.findClientByEmail(client.getEmail());
+        if (clientExists != null) {
+            return clientExists;
+        }
+        existingClient.setEmail(client.getEmail());
+        existingClient.setName(client.getName());
+        existingClient.setPassword(client.getPassword());
+        Client updatedClient = clientRepository.save(existingClient);
+        String clientJson = convertClientToJson(updatedClient);
+        rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
+
+        return updatedClient;
     }
 
     @GetMapping("/client/list")

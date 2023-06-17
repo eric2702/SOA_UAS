@@ -1,0 +1,43 @@
+services:
+  staff_sql:
+    image: mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./staff_sql/:/docker-entrypoint-initdb.d
+    networks:
+      - StaffNet
+  staff_cons:
+    build: ./staff_cons
+    image: staff_cons
+    ports:
+      - 8083:8083
+    volumes:
+      - ./staff_cons:/staff_cons
+    networks:
+      - EONet
+      - StaffNet
+    depends_on:
+      staff_sql:
+        condition: service_started
+      staff_svc:
+        condition: service_started
+  staff_svc:
+    build: ./staff_svc
+    image: staff_svc
+    ports:
+      - 8082:8082
+    volumes:
+      - ./staff_svc:/staff_svc
+    networks:
+      - EONet
+      - StaffNet
+    depends_on:
+      staff_sql:
+        condition: service_started
+networks:
+  EONet:
+    external: true
+  StaffNet:
