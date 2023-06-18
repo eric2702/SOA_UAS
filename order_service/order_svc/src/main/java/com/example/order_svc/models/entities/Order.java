@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "orders")
@@ -16,7 +17,9 @@ public class Order {
 
     private String description;
     private Long id_client;
-    private Timestamp timestamp;
+    private Date timestamp = new Date();
+
+    private Boolean is_done = false;
 
     public Order() {
     }
@@ -24,7 +27,7 @@ public class Order {
     public Order(String description, Long id_client) {
         this.description = description;
         this.id_client = id_client;
-        this.timestamp = new Timestamp(System.currentTimeMillis());
+
     }
 
     public Long getId() {
@@ -51,11 +54,20 @@ public class Order {
         this.id_client = id_client;
     }
 
-    public Timestamp getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+
+    public Boolean getIs_done() {
+        return is_done;
+    }
+
+    public void setIs_done(Boolean is_done) {
+        this.is_done = is_done;
+    }
+
 }

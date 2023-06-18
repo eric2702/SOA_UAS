@@ -78,7 +78,6 @@ public class OrderDetails {
         return id_order;
     }
 
-    @JsonIgnore
     public void setId_order(Long id_order) {
         this.id_order = id_order;
     }

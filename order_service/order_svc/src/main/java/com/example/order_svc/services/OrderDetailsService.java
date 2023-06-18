@@ -36,4 +36,8 @@ public class OrderDetailsService {
     public OrderDetails updateOrderData(OrderDetails order) {
         return orderDetailsRepository.save(order);
     }
+
+    public List<OrderDetails> getOrderDetailsById_order(Long orderId) {
+        return orderDetailsRepository.findByOrderId(orderId);
+    }
 }
