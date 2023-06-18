@@ -35,4 +35,12 @@ public class ClientService {
     public Client updateClientData(Client client) {
         return clientRepository.save(client);
     }
+
+    public Client loginClient(String email, String password) {
+        // Perform client login logic
+
+        Client client = clientRepository.findClientByEmailAndPassword(email, password);
+
+        return client;
+    }
 }
