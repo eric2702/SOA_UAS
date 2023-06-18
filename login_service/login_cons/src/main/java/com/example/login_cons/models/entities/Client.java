@@ -1,4 +1,4 @@
-package com.example.login_svc.models.entities;
+package com.example.login_cons.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
