@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.login_cons.models.entities.Client;
+import com.example.login_cons.models.entities.Staff;
 import com.example.login_cons.models.repos.ClientRepository;
+import com.example.login_cons.models.repos.StaffRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,11 +18,13 @@ public class Receiver {
     private CountDownLatch latch = new CountDownLatch(1);
     // private final StaffRepository staffRepository;
     private final ClientRepository clientRepository;
+    private final StaffRepository staffRepository;
 
     @Autowired
-    public Receiver(ClientRepository clientRepository) {
+    public Receiver(ClientRepository clientRepository, StaffRepository staffRepository) {
         // this.staffRepository = staffRepository;
         this.clientRepository = clientRepository;
+        this.staffRepository = staffRepository;
     }
 
     public void receiveMessage(String message, String routingKey) {
@@ -43,6 +47,28 @@ public class Receiver {
     private void uploadToStaffTable(String message) {
         // Implement your logic to upload the message to the staff table
         System.out.println("Uploading to staff table: " + message);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(message);
+
+            // Use the jsonNode object to perform operations on the JSON data
+            // For example, you can extract values using jsonNode.get("property")
+            // or iterate over the fields using jsonNode.fields()
+
+            // Perform your database upload operation here
+            Long id = jsonNode.get("id").asLong();
+            String email = jsonNode.get("email").asText();
+            String password = jsonNode.get("password").asText();
+            Staff staff = new Staff(id, email, password);
+            staffRepository.save(staff);
+            // Example: clientRepository.save(jsonNode);
+
+            System.out.println("Uploaded staff: " + jsonNode);
+        } catch (Exception e) {
+            // Handle the exception if JSON parsing or database operation fails
+            System.out.println("Failed to upload staff: " + e.getMessage());
+        }
+
     }
 
     private void uploadToClientTable(String message) {
