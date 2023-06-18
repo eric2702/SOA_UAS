@@ -1,4 +1,6 @@
-package com.example.staff_svc.models.entities;
+package com.example.login_svc.models.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,19 +12,17 @@ import jakarta.persistence.Table;
 @Table(name = "staff")
 public class Staff {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
-    private String name;
     private String password;
 
     public Staff() {
     }
 
-    public Staff(String email, String name, String password) {
+    public Staff(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
-        this.name = name;
         this.password = password;
     }
 
@@ -40,14 +40,6 @@ public class Staff {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPassword() {
