@@ -100,12 +100,31 @@ public class Sender implements CommandLineRunner {
     }
 
     @PutMapping("/order/data")
-    public Order updateClientData(@RequestBody Order client) {
-        return orderService.updateOrderData(client);
+    public ResponseEntity updateOrderData(@RequestBody OrderRequest orderRequest) {
+        Order order = orderRequest.getOrder();
+        Order updatedOrder = orderService.updateOrderData(order);
+        // and also update order details
+        List<OrderDetails> orderDetailsList = orderRequest.getOrderDetails();
+        for (OrderDetails orderDetails : orderDetailsList) {
+            orderDetailsRepository.save(orderDetails);
+        }
+        ApiResponse apiResponse = new ApiResponse(true, "Order data updated successfully", updatedOrder);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/order/list")
-    public List<Order> getAllClients() {
-        return orderService.getAllOrders();
+    public ResponseEntity getAllOrders() {
+
+        List<Order> orders = orderService.getAllOrders();
+        ApiResponse apiResponse = new ApiResponse(true, "Orders retrieved successfully", orders);
+        return ResponseEntity.ok(apiResponse);
     }
+
+    @GetMapping("/order/details/{order_id}")
+    public ResponseEntity getOrderDetailsById(@PathVariable Long order_id) {
+        List<OrderDetails> orderDetails = orderDetailsService.getOrderDetailsById_order(order_id);
+        ApiResponse apiResponse = new ApiResponse(true, "Order details retrieved successfully", orderDetails);
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }
