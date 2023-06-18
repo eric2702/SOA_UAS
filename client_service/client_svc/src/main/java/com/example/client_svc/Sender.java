@@ -1,11 +1,15 @@
 package com.example.client_svc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.example.client_svc.helpers.response.ApiResponse;
 import com.example.client_svc.models.entities.Client;
 import com.example.client_svc.models.repos.ClientRepository;
 import com.example.client_svc.services.ClientService;
@@ -24,6 +28,16 @@ public class Sender implements CommandLineRunner {
     private final RabbitTemplate rabbitTemplate;
     private final ClientService clientService;
     private final ClientRepository clientRepository;
+
+    private String convertClientToJson(Client client) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(client);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Autowired
     public Sender(RabbitTemplate rabbitTemplate, ClientService clientService, ClientRepository clientRepository) {
@@ -45,39 +59,29 @@ public class Sender implements CommandLineRunner {
     }
 
     @PostMapping("/client/register")
-    public Client addClient(@RequestBody Client client) {
+    public ResponseEntity addClient(@RequestBody Client client) {
         System.out.println("Sending message...");
 
         Client clientExists = clientRepository.findClientByEmail(client.getEmail());
         if (clientExists != null) {
-            return clientExists;
+            ApiResponse response = new ApiResponse(false, "Client already exists");
+            return ResponseEntity.badRequest().body(response);
         }
         Client newClient = clientService.addClient(client);
         String clientJson = convertClientToJson(newClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.new", clientJson);
-
-        return newClient;
-    }
-
-    private String convertClientToJson(Client client) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(client);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        Map<String, Object> respData = new HashMap<>();
+        respData.put("id", newClient.getId());
+        ApiResponse response = new ApiResponse(true, "Client registered successfully", respData);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/client/data")
-    public Client updateClientData(@RequestBody Client client) {
+    public ResponseEntity updateClientData(@RequestBody Client client) {
         Client existingClient = clientRepository.findById(client.getId()).orElse(null);
         if (existingClient == null) {
-            throw new RuntimeException("Client not found");
-        }
-        Client clientExists = clientRepository.findClientByEmail(client.getEmail());
-        if (clientExists != null) {
-            return clientExists;
+            ApiResponse response = new ApiResponse(false, "Client does not exist");
+            return ResponseEntity.badRequest().body(response);
         }
         existingClient.setEmail(client.getEmail());
         existingClient.setName(client.getName());
@@ -86,11 +90,21 @@ public class Sender implements CommandLineRunner {
         String clientJson = convertClientToJson(updatedClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
 
-        return updatedClient;
+        Map<String, Object> respData = new HashMap<>();
+        respData.put("id", updatedClient.getId());
+        ApiResponse response = new ApiResponse(true, "Client data updated successfully", respData);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/client/list")
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
+    public ResponseEntity getAllClients() {
+        List<Client> clients = clientService.getAllClients();
+        // remove the password key from each client
+        for (Client client : clients) {
+            client.setPassword(null);
+        }
+
+        ApiResponse response = new ApiResponse(true, "Clients retrieved successfully", clients);
+        return ResponseEntity.ok(response);
     }
 }
