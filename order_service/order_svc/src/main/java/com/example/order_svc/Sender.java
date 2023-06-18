@@ -1,14 +1,23 @@
 package com.example.order_svc;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.example.order_svc.helpers.response.ApiResponse;
 import com.example.order_svc.models.entities.Order;
+import com.example.order_svc.models.entities.OrderDetails;
+import com.example.order_svc.models.entities.OrderRequest;
+import com.example.order_svc.models.repos.OrderDetailsRepository;
 import com.example.order_svc.models.repos.OrderRepository;
+import com.example.order_svc.services.OrderDetailsService;
 import com.example.order_svc.services.OrderService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +31,37 @@ public class Sender implements CommandLineRunner {
     private final RabbitTemplate rabbitTemplate;
     private final OrderService orderService;
     private final OrderRepository orderRepository;
+    private final OrderDetailsRepository orderDetailsRepository;
+    private final OrderDetailsService orderDetailsService;
+
+    private String convertOrderToJson(Order order) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(order);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String convertOrderDetailsToJson(OrderDetails orderDetails) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(orderDetails);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Autowired
-    public Sender(RabbitTemplate rabbitTemplate, OrderService orderService, OrderRepository orderRepository) {
+    public Sender(RabbitTemplate rabbitTemplate, OrderService orderService, OrderRepository orderRepository,
+            OrderDetailsRepository orderDetailsRepository, OrderDetailsService orderDetailsService) {
         this.rabbitTemplate = rabbitTemplate;
         this.orderService = orderService;
         this.orderRepository = orderRepository;
+        this.orderDetailsRepository = orderDetailsRepository;
+        this.orderDetailsService = orderDetailsService;
     }
 
     @Override
@@ -42,20 +76,27 @@ public class Sender implements CommandLineRunner {
         return "Message sent: " + message;
     }
 
-    @PostMapping("/order/register")
-    public Order addClient(@RequestBody Order client) {
+    @PostMapping("/order/add")
+    public ResponseEntity addOrder(@RequestBody OrderRequest orderRequest) {
         System.out.println("Sending message...");
-        // check if client already exists
-        // Order clientExists = orderRepository.findClientByEmail(client.getEmail());
-        // if (clientExists != null) {
-        // return clientExists;
-        // }
-        // convert client to json
-        Order new_client = orderService.addOrder(client);
+        Order order = orderRequest.getOrder();
+        List<OrderDetails> orderDetailsList = orderRequest.getOrderDetails();
 
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", new_client.toString());
+        Order newOrder = orderService.addOrder(order);
+        Long newOrderId = newOrder.getId();
 
-        return new_client;
+        rabbitTemplate.convertAndSend(topicExchangeName, "order.new", convertOrderToJson(newOrder));
+
+        for (OrderDetails orderDetails : orderDetailsList) {
+            orderDetails.setId_order(newOrderId);
+            orderDetailsRepository.save(orderDetails);
+            rabbitTemplate.convertAndSend(topicExchangeName, "order_details.new",
+                    convertOrderDetailsToJson(orderDetails));
+        }
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("id", newOrder.getId());
+        ApiResponse apiResponse = new ApiResponse(true, "Order added successfully", response);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PutMapping("/order/data")

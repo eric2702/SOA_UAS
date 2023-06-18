@@ -8,28 +8,30 @@ import jakarta.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "order_details")
-public class OrderDetail {
+public class OrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date date;
-    private Time timeStart;
-    private Time timeEnd;
+    private Time time_start;
+    private Time time_end;
     private String location;
-    private Long idOrder;
+    private Long id_order;
 
-    public OrderDetail() {
+    public OrderDetails() {
     }
 
-    public OrderDetail(Date date, Time timeStart, Time timeEnd, String location, Long idOrder) {
+    public OrderDetails(Date date, Time time_start, Time time_end, String location, Long id_order) {
         this.date = date;
-        this.timeStart = timeStart;
-        this.timeEnd = timeEnd;
+        this.time_start = time_start;
+        this.time_end = time_end;
         this.location = location;
-        this.idOrder = idOrder;
+        this.id_order = id_order;
     }
 
     public Long getId() {
@@ -48,20 +50,20 @@ public class OrderDetail {
         this.date = date;
     }
 
-    public Time getTimeStart() {
-        return timeStart;
+    public Time getTime_start() {
+        return time_start;
     }
 
-    public void setTimeStart(Time timeStart) {
-        this.timeStart = timeStart;
+    public void setTime_start(Time time_start) {
+        this.time_start = time_start;
     }
 
-    public Time getTimeEnd() {
-        return timeEnd;
+    public Time getTime_end() {
+        return time_end;
     }
 
-    public void setTimeEnd(Time timeEnd) {
-        this.timeEnd = timeEnd;
+    public void setTime_end(Time time_end) {
+        this.time_end = time_end;
     }
 
     public String getLocation() {
@@ -72,11 +74,12 @@ public class OrderDetail {
         this.location = location;
     }
 
-    public Long getIdOrder() {
-        return idOrder;
+    public Long getId_order() {
+        return id_order;
     }
 
-    public void setIdOrder(Long idOrder) {
-        this.idOrder = idOrder;
+    @JsonIgnore
+    public void setId_order(Long id_order) {
+        this.id_order = id_order;
     }
 }

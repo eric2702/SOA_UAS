@@ -15,15 +15,15 @@ public class Order {
     private Long id;
 
     private String description;
-    private Long id_user;
+    private Long id_client;
     private Timestamp timestamp;
 
     public Order() {
     }
 
-    public Order(String description, Long id_user) {
+    public Order(String description, Long id_client) {
         this.description = description;
-        this.id_user = id_user;
+        this.id_client = id_client;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
@@ -43,12 +43,12 @@ public class Order {
         this.description = description;
     }
 
-    public Long getUserId() {
-        return id_user;
+    public Long getId_client() {
+        return id_client;
     }
 
-    public void setUserId(Long id_user) {
-        this.id_user = id_user;
+    public void setId_client(Long id_client) {
+        this.id_client = id_client;
     }
 
     public Timestamp getTimestamp() {
