@@ -13,4 +13,4 @@ masuk ke setiap project spring boot and build the jar files with command:
 ./mvnw clean package -DskipTests
 
 terus di root folder:
-docker-compose -f docker-compose.yml up -d && docker compose -f client_service/docker-compose.yml up -d && docker compose -f staff_service/docker-compose.yml up -d && docker compose -f login_service/docker-compose.yml up -d && docker compose -f order_service/docker-compose.yml up -d && docker compose -f event_service/docker-compose.yml up -d
+docker-compose -f docker-compose.yml up -d && docker compose -f client_service/docker-compose.yml up -d && docker compose -f staff_service/docker-compose.yml up -d && docker compose -f login_service/docker-compose.yml up -d && docker compose -f order_service/docker-compose.yml up -d && docker compose -f event_service/docker-compose.yml up -d && docker-compose -f web_ui_service/docker-compose.yml up -d --build
