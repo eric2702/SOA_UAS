@@ -30,8 +30,18 @@ public class EventConsApplication {
 	}
 
 	@Bean
-	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+	Binding binding1(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("client.#");
+	}
+
+	@Bean
+	Binding binding2(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("staff.#");
+	}
+
+	@Bean
+	Binding binding3(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("order.#");
 	}
 
 	@Bean
