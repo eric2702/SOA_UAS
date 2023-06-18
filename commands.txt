@@ -1,3 +1,14 @@
+AUTOMATIC
+Config for automatic:
+chmod +x build-java.sh
+chmod +x run-containers.sh
+
+Automatic:
+./build-java.sh
+./run-containers.sh
+
+==========================================================================
+MANUAL
 masuk ke setiap project spring boot and build the jar files with command:
 ./mvnw clean package -DskipTests
 
