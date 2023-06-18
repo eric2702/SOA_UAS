@@ -1,13 +1,12 @@
-package com.example.order_svc.models.entities;
+package com.example.staff_svc.models.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-public class Client {
+public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,10 +15,10 @@ public class Client {
     private String name;
     private String password;
 
-    public Client() {
+    public Staff() {
     }
 
-    public Client(String email, String name, String password) {
+    public Staff(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;

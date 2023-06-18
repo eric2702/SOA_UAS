@@ -30,8 +30,13 @@ public class LoginConsApplication {
 	}
 
 	@Bean
-	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+	Binding binding1(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("client.#");
+	}
+
+	@Bean
+	Binding binding2(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("staff.#");
 	}
 
 	@Bean
