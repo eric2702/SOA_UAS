@@ -2,6 +2,7 @@ package com.example.order_cons;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -10,6 +11,8 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import com.rabbitmq.client.Channel;
 
 import java.util.UUID;
 
@@ -51,11 +54,29 @@ public class OrderConsApplication {
 
 	@Bean
 	MessageListenerAdapter listenerAdapter(Receiver receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage");
+		CustomMessageListenerAdapter messageListenerAdapter = new CustomMessageListenerAdapter(receiver);
+		messageListenerAdapter.setDefaultListenerMethod("receiveMessage");
+		return messageListenerAdapter;
 	}
 
 	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(OrderConsApplication.class, args);
+	}
+
+	public static class CustomMessageListenerAdapter extends MessageListenerAdapter {
+
+		private final Receiver receiver;
+
+		public CustomMessageListenerAdapter(Receiver receiver) {
+			this.receiver = receiver;
+		}
+
+		@Override
+		public void onMessage(Message message, Channel channel) throws Exception {
+			String routingKey = message.getMessageProperties().getReceivedRoutingKey();
+			String messageBody = new String(message.getBody());
+			receiver.receiveMessage(messageBody, routingKey);
+		}
 	}
 
 }
