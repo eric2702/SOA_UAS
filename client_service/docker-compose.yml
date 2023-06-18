@@ -9,11 +9,16 @@ services:
       - ./client_sql/:/docker-entrypoint-initdb.d
     networks:
       - ClientNet
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 1s
+      retries: 10
   client_cons:
     build: ./client_cons
     image: client_cons
     ports:
-      - 8081:8081
+      - 8081:8080
     volumes:
       - ./client_cons:/client_cons
     networks:
@@ -21,7 +26,7 @@ services:
       - ClientNet
     depends_on:
       client_sql:
-        condition: service_started
+        condition: service_healthy
       client_svc:
         condition: service_started
   client_svc:
@@ -36,7 +41,7 @@ services:
       - ClientNet
     depends_on:
       client_sql:
-        condition: service_started
+        condition: service_healthy
 networks:
   EONet:
     external: true

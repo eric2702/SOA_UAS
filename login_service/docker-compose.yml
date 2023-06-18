@@ -9,11 +9,16 @@ services:
       - ./login_sql/:/docker-entrypoint-initdb.d
     networks:
       - LoginNet
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 1s
+      retries: 10
   login_cons:
     build: ./login_cons
     image: login_cons
     ports:
-      - 8089:8089
+      - 8089:8080
     volumes:
       - ./login_cons:/login_cons
     networks:
@@ -21,14 +26,14 @@ services:
       - LoginNet
     depends_on:
       login_sql:
-        condition: service_started
+        condition: service_healthy
       login_svc:
         condition: service_started
   login_svc:
     build: ./login_svc
     image: login_svc
     ports:
-      - 8088:8088
+      - 8088:8080
     volumes:
       - ./login_svc:/login_svc
     networks:
@@ -36,7 +41,7 @@ services:
       - LoginNet
     depends_on:
       login_sql:
-        condition: service_started
+        condition: service_healthy
 networks:
   EONet:
     external: true

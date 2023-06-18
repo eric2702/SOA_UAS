@@ -37,6 +37,13 @@ public class Sender implements CommandLineRunner {
         System.out.println("Sending message...");
     }
 
+    @GetMapping("/send/{message}")
+    public String sendMessage(@PathVariable String message) {
+        System.out.println("Sending message...");
+        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", message);
+        return "Message sent: " + message;
+    }
+
     @PostMapping("/client/register")
     public Client addClient(@RequestBody Client client) {
         System.out.println("Sending message...");

@@ -9,11 +9,16 @@ services:
       - ./order_sql/:/docker-entrypoint-initdb.d
     networks:
       - OrderNet
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 1s
+      retries: 10
   order_cons:
     build: ./order_cons
     image: order_cons
     ports:
-      - 8085:8085
+      - 8085:8080
     volumes:
       - ./order_cons:/order_cons
     networks:
@@ -21,14 +26,14 @@ services:
       - OrderNet
     depends_on:
       order_sql:
-        condition: service_started
+        condition: service_healthy
       order_svc:
         condition: service_started
   order_svc:
     build: ./order_svc
     image: order_svc
     ports:
-      - 8084:8084
+      - 8084:8080
     volumes:
       - ./order_svc:/order_svc
     networks:
@@ -36,7 +41,7 @@ services:
       - OrderNet
     depends_on:
       order_sql:
-        condition: service_started
+        condition: service_healthy
 networks:
   EONet:
     external: true
