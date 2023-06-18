@@ -1,5 +1,6 @@
 package com.example.client_svc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,12 +100,21 @@ public class Sender implements CommandLineRunner {
     @GetMapping("/client/list")
     public ResponseEntity getAllClients() {
         List<Client> clients = clientService.getAllClients();
-        // remove the password key from each client
+        // empty list to hold clients without password
+        List<Map<String, Object>> clientListWithoutPasswd = new ArrayList<>();
         for (Client client : clients) {
-            client.setPassword(null);
+            // get id name and email and put it in a map and add it to the list
+            Map<String, Object> clientMapWithoutPasswd = new HashMap<>();
+
+            clientMapWithoutPasswd.put("id", client.getId());
+            clientMapWithoutPasswd.put("name", client.getName());
+            clientMapWithoutPasswd.put("email", client.getEmail());
+
+            clientListWithoutPasswd.add(clientMapWithoutPasswd);
+
         }
 
-        ApiResponse response = new ApiResponse(true, "Clients retrieved successfully", clients);
+        ApiResponse response = new ApiResponse(true, "Clients retrieved successfully", clientListWithoutPasswd);
         return ResponseEntity.ok(response);
     }
 }
