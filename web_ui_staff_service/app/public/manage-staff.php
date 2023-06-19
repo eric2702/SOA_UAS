@@ -43,26 +43,37 @@
         <?php include 'navbar.php'; ?>
         <div class="container">
             <div align="center" style="margin-top:40px;">
-                <!-- <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
                     aria-expanded="false" aria-controls="collapseExample">
-                    Add new Order
-                </button> -->
+                    Add new Staff
+                </button>
             </div>
 
             <div class="collapse" id="collapseExample">
                 <div class="row"
                     style="background-color: #ffffff57;backdrop-filter: blur(5px); color:white; margin-top:20px; padding:10px">
-                    <h1 style="text-align: center;">Add new Order</h1>
+                    <h1 style="text-align: center;">Add new Staff</h1>
 
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" id="description" class="form-control" name="description" required>
+                        <label for="description" class="form-label">Name:</label>
+                        <input type="text" id="add-staff-name" class="form-control" name="description" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Email:</label>
+                        <input type="text" id="add-staff-email" class="form-control" name="description" required>
+                    </div>
+
+                    <!-- password -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Password:</label>
+                        <input type="password" id="add-staff-password" class="form-control" name="description" required>
                     </div>
 
 
 
-                    <div id="detailsContainer">
+                    <!-- <div id="detailsContainer">
                         <div class="row">
                             <div class="col">
                                 <h3>Order Details:</h3>
@@ -96,9 +107,9 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div align="center">
-                        <button type="submit" class="btn btn-primary" id="submitorder">Add new order</button>
+                        <button type="submit" class="btn btn-primary" id="submitstaff">Save</button>
                     </div>
 
 
@@ -116,11 +127,12 @@
                                     #
                                 </th>
                                 <th class="text-white">
-                                    Description
+                                    Name
                                 </th>
                                 <th class="text-white">
-                                    Actions
+                                    Email
                                 </th>
+
 
 
 
@@ -142,10 +154,10 @@
     <!-- Modal -->
     <div class="modal fade" id="eventsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Create Events</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -205,35 +217,31 @@
         });
 
         $.ajax({
-            url: "http://localhost:8084/order/lists",
+            url: "http://localhost:8082/staff/list",
             method: "GET",
             success: function(response) {
-                var orderList = response.data;
+                var clientList = response.data;
 
                 // Clear the existing table body
                 $("#orderListBody").empty();
 
-                // Loop through the orders and add them to the table
-                for (var i = 0; i < orderList.length; i++) {
-                    var order = orderList[i].order;
+                // Loop through the clients and add them to the table
+                for (var i = 0; i < clientList.length; i++) {
+                    var client = clientList[i];
                     var row = $("<tr></tr>");
 
-                    // alert(JSON.stringify(order));
-
-                    row.append(
-                        '<td class="details-control"><span class="expand-details" data-order="' +
-                        JSON.stringify(order) + '">' + order.id + '</span></td>');
-
-
-                    row.append("<td>" + order.description + "</td>");
-                    row.append(
-                        '<td><button class="btn btn-primary create-events" data-order-id="' +
-                        order.id + '">Create Events</button></td>'
-                    );
+                    row.append('<td>' + client.id + '</td>');
+                    row.append('<td>' + client.name + '</td>');
+                    row.append('<td>' + client.email + '</td>');
+                    // row.append(
+                    //     '<td><button class="btn btn-primary create-events" data-client-id="' +
+                    //     client.id + '">Create Events</button></td>'
+                    // );
 
                     // Add the row to the table body
                     $("#orderListBody").append(row);
                 }
+
                 var table = $('#tableOrder').DataTable({
                     dom: 'lBfrtip',
                     responsive: true,
@@ -278,15 +286,15 @@
                     lengthMenu: [
                         [5, 10, 25, 50, 100, -1],
                         [5, 10, 25, 50, 100, "All"]
-                    ], // Use "All" instead of -1 // Configure the available options for number of rows
-                    pageLength: 10 // Set the initial number of rows to display
+                    ],
+                    pageLength: 10
                 });
-
             },
             error: function(error) {
                 console.log(error);
             }
         });
+
 
         //when click create events button in table get the order details from api 
         $(document).on('click', '.create-events', function() {
@@ -365,48 +373,46 @@
         }
 
         // Add event listener to the "Add More Details" button
-        var addDetailBtn = document.getElementById('addDetailBtn');
-        addDetailBtn.addEventListener('click', addDetailFields);
-        $("#submitorder").click(function(e) {
+        // var addDetailBtn = document.getElementById('addDetailBtn');
+        // addDetailBtn.addEventListener('click', addDetailFields);
+        $("#submitstaff").click(function(e) {
             event.preventDefault(); // Prevent the default form submission behavior
-            var email = sessionStorage.getItem('id');
+            // var email = sessionStorage.getItem('id');
             var jsonData = {
-                "order": {
-                    "description": $("#description").val(),
-                    "id_client": email
-                },
-                "orderDetails": []
+                "name": $("#add-staff-name").val(),
+                "email": $("#add-staff-email").val(),
+                "password": $("#add-staff-password").val(),
             };
-            var detailElements = document.getElementsByClassName('orderDetail');
-            for (var i = 0; i < detailElements.length; i++) {
-                var detailElement = detailElements[i];
-                var timeStartValue = detailElement.querySelector('.timeStart').value;
-                var timeEndValue = detailElement.querySelector('.timeEnd').value;
-                var orderDetail = {
-                    "location": detailElement.querySelector('.location').value,
-                    "date": detailElement.querySelector('.date').value,
-                    "time_start": formatTime(timeStartValue),
-                    "time_end": formatTime(timeEndValue)
+            // var detailElements = document.getElementsByClassName('orderDetail');
+            // for (var i = 0; i < detailElements.length; i++) {
+            //     var detailElement = detailElements[i];
+            //     var timeStartValue = detailElement.querySelector('.timeStart').value;
+            //     var timeEndValue = detailElement.querySelector('.timeEnd').value;
+            //     var orderDetail = {
+            //         "location": detailElement.querySelector('.location').value,
+            //         "date": detailElement.querySelector('.date').value,
+            //         "time_start": formatTime(timeStartValue),
+            //         "time_end": formatTime(timeEndValue)
 
-                };
+            //     };
 
-                jsonData.orderDetails.push(orderDetail);
-            }
+            //     jsonData.orderDetails.push(orderDetail);
+            // }
 
             $.ajax({
-                url: "http://localhost:8084/order/add",
+                url: "http://localhost:8082/staff/register",
                 method: "POST",
                 data: JSON.stringify(jsonData),
                 contentType: "application/json",
                 success: function(response) {
 
-                    Swal.fire('Success', 'Order added successfully!', 'success');
+                    Swal.fire('Success', 'Staff added successfully!', 'success');
 
 
                 },
                 error: function(error) {
                     console.log(error);
-                    Swal.fire('Error', 'Failed to add the order. Please try again.',
+                    Swal.fire('Error', 'Failed to add the staff. Please try again.',
                         'error');
                 }
 

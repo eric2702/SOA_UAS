@@ -116,11 +116,12 @@
                                     #
                                 </th>
                                 <th class="text-white">
-                                    Description
+                                    Name
                                 </th>
                                 <th class="text-white">
-                                    Actions
+                                    Email
                                 </th>
+
 
 
 
@@ -142,10 +143,10 @@
     <!-- Modal -->
     <div class="modal fade" id="eventsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Create Events</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -205,35 +206,31 @@
         });
 
         $.ajax({
-            url: "http://localhost:8084/order/lists",
+            url: "http://localhost:8080/client/list",
             method: "GET",
             success: function(response) {
-                var orderList = response.data;
+                var clientList = response.data;
 
                 // Clear the existing table body
                 $("#orderListBody").empty();
 
-                // Loop through the orders and add them to the table
-                for (var i = 0; i < orderList.length; i++) {
-                    var order = orderList[i].order;
+                // Loop through the clients and add them to the table
+                for (var i = 0; i < clientList.length; i++) {
+                    var client = clientList[i];
                     var row = $("<tr></tr>");
 
-                    // alert(JSON.stringify(order));
-
-                    row.append(
-                        '<td class="details-control"><span class="expand-details" data-order="' +
-                        JSON.stringify(order) + '">' + order.id + '</span></td>');
-
-
-                    row.append("<td>" + order.description + "</td>");
-                    row.append(
-                        '<td><button class="btn btn-primary create-events" data-order-id="' +
-                        order.id + '">Create Events</button></td>'
-                    );
+                    row.append('<td>' + client.id + '</td>');
+                    row.append('<td>' + client.name + '</td>');
+                    row.append('<td>' + client.email + '</td>');
+                    // row.append(
+                    //     '<td><button class="btn btn-primary create-events" data-client-id="' +
+                    //     client.id + '">Create Events</button></td>'
+                    // );
 
                     // Add the row to the table body
                     $("#orderListBody").append(row);
                 }
+
                 var table = $('#tableOrder').DataTable({
                     dom: 'lBfrtip',
                     responsive: true,
@@ -278,15 +275,15 @@
                     lengthMenu: [
                         [5, 10, 25, 50, 100, -1],
                         [5, 10, 25, 50, 100, "All"]
-                    ], // Use "All" instead of -1 // Configure the available options for number of rows
-                    pageLength: 10 // Set the initial number of rows to display
+                    ],
+                    pageLength: 10
                 });
-
             },
             error: function(error) {
                 console.log(error);
             }
         });
+
 
         //when click create events button in table get the order details from api 
         $(document).on('click', '.create-events', function() {
