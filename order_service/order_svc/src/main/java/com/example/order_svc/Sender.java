@@ -1,5 +1,6 @@
 package com.example.order_svc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -124,6 +125,22 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity getOrderDetailsById(@PathVariable Long order_id) {
         List<OrderDetails> orderDetails = orderDetailsService.getOrderDetailsById_order(order_id);
         ApiResponse apiResponse = new ApiResponse(true, "Order details retrieved successfully", orderDetails);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/order/lists")
+    public ResponseEntity getOrderListWithDetails() {
+        List<Order> orders = orderService.getAllOrders();
+        List<OrderRequest> orderListWithDetails = new ArrayList<>();
+
+        for (Order order : orders) {
+            List<OrderDetails> orderDetails = orderDetailsService.getOrderDetailsById_order(order.getId());
+            OrderRequest orderRequest = new OrderRequest(order, orderDetails);
+            orderListWithDetails.add(orderRequest);
+        }
+
+        ApiResponse apiResponse = new ApiResponse(true, "Order list with details retrieved successfully",
+                orderListWithDetails);
         return ResponseEntity.ok(apiResponse);
     }
 

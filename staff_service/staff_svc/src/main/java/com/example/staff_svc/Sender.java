@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -84,10 +85,13 @@ public class Sender implements CommandLineRunner {
             ApiResponse response = new ApiResponse(false, "Staff does not exist");
             return ResponseEntity.badRequest().body(response);
         }
-        existingStaff.setEmail(staff.getEmail());
-        existingStaff.setName(staff.getName());
-        existingStaff.setPassword(staff.getPassword());
-        Staff updatedStaff = staffRepository.save(existingStaff);
+        Staff staffExists = staffRepository.findStaffByEmail(staff.getEmail());
+        if (staffExists != null) {
+            ApiResponse response = new ApiResponse(false, "Staff already exists");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Staff updatedStaff = staffService.updateStaffData(staff);
         String staffJson = convertStaffToJson(updatedStaff);
         rabbitTemplate.convertAndSend(topicExchangeName, "staff.changed", staffJson);
 

@@ -8,6 +8,9 @@ import com.example.client_svc.models.repos.ClientRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 public class ClientService {
@@ -20,7 +23,8 @@ public class ClientService {
     }
 
     public Client addClient(Client client) {
-
+        String encryptedPassword = encryptPassword(client.getPassword());
+        client.setPassword(encryptedPassword);
         return clientRepository.save(client);
     }
 
@@ -33,6 +37,30 @@ public class ClientService {
     }
 
     public Client updateClientData(Client client) {
+        String encryptedPassword = encryptPassword(client.getPassword());
+        client.setPassword(encryptedPassword);
         return clientRepository.save(client);
     }
+
+    public static String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the byte array to a hexadecimal string representation
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

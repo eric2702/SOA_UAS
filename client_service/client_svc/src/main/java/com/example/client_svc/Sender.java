@@ -68,6 +68,7 @@ public class Sender implements CommandLineRunner {
             ApiResponse response = new ApiResponse(false, "Client already exists");
             return ResponseEntity.badRequest().body(response);
         }
+
         Client newClient = clientService.addClient(client);
         String clientJson = convertClientToJson(newClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.new", clientJson);
@@ -84,10 +85,16 @@ public class Sender implements CommandLineRunner {
             ApiResponse response = new ApiResponse(false, "Client does not exist");
             return ResponseEntity.badRequest().body(response);
         }
-        existingClient.setEmail(client.getEmail());
-        existingClient.setName(client.getName());
-        existingClient.setPassword(client.getPassword());
-        Client updatedClient = clientRepository.save(existingClient);
+
+        Client clientExists = clientRepository.findClientByEmail(client.getEmail());
+        if (clientExists != null) {
+            ApiResponse response = new ApiResponse(false, "Client already exists");
+            return ResponseEntity.badRequest().body(response);
+        }
+        // existingClient.setEmail(client.getEmail());
+        // existingClient.setName(client.getName());
+        // existingClient.setPassword(client.getPassword());
+        Client updatedClient = clientService.updateClientData(client);
         String clientJson = convertClientToJson(updatedClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
 
