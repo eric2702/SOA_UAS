@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>Client - Login</title>
+    <title>Staff - Login</title>
 </head>
 <style>
     .background-radial-gradient {
@@ -123,15 +123,17 @@
                     <h1 class="my-3  fw-bold title">
                         <span class="title-word title-word-1">Welcome</span>
                         <span class="title-word title-word-2">at</span>
-                        <span class="title-word title-word-3">Event</span>
-                        <span class="title-word title-word-4">Genius</span>
+                        <span class="title-word title-word-3">Staff</span>
+                        <span class="title-word title-word-4">Page</span>
                     </h1>
                     <h2 class="my-3  fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
                         Unleash the Power of <br />
                         <span style="color: hsl(218, 81%, 75%)">Memorable Events</span>
                     </h2>
                     <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                        Experience unforgettable events brought to life by our expert team of organizers. From corporate conferences to social gatherings, we handle every detail to deliver seamless and stress-free experiences that exceed your expectations.
+                        Experience unforgettable events brought to life by our expert team of organizers. From corporate
+                        conferences to social gatherings, we handle every detail to deliver seamless and stress-free
+                        experiences that exceed your expectations.
                     </p>
                 </div>
 
@@ -177,7 +179,8 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Already have an account? <span style="text-decoration: underline; cursor:pointer;" id="signin-link">Sign in here</span></p>
+                                    <p>Already have an account? <span style="text-decoration: underline; cursor:pointer;" id="signin-link">Sign in
+                                            here</span></p>
                                     <br>
                                 </div>
                             </div>
@@ -226,7 +229,8 @@
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <script>
         $(document).ready(function() {
             // Register link click event handler
@@ -268,9 +272,10 @@
 
                         // Make a POST request to http://localhost:8080/client/register with the form data
                         $.ajax({
-                            url: "http://localhost:8080/client/register",
+                            url: "http://localhost:8082/staff/register",
                             method: "POST",
-                            data: JSON.stringify(formData), // Serialize the form data as JSON
+                            data: JSON.stringify(
+                                formData), // Serialize the form data as JSON
                             contentType: "application/json", // Set the content type as JSON
                             success: function(response) {
                                 // Handle success response
@@ -305,7 +310,7 @@
 
 
                 $.ajax({
-                    url: "http://localhost:8088/client/login",
+                    url: "http://localhost:8088/staff/login",
                     method: "POST",
                     data: JSON.stringify(formData), // Serialize the form data as JSON
                     contentType: "application/json", // Set the content type as JSON
