@@ -145,10 +145,10 @@
         </div>
 
         <div class="modal fade" id="EditorderDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="EditorderDetailsModalLabel">Order Details</h5>
+                        <h5 class="modal-title" id="EditorderDetailsModalLabel">Edit Order Details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -210,10 +210,86 @@
                     }
                 });
             });
+            $(document).on('click', '#updateOrder', function() {
 
+                // Retrieve the form data
+                var orderID = $(this).closest('.modal-content').find('.expand-details').html();
+                var description = $('#description2').val();
+                var orderDetails = [];
+
+                var id_client = sessionStorage.getItem('id');
+
+
+
+                // Retrieve the order details data from the form
+                $('.modal-body .row').each(function() {
+                    var id = $(this).find('.id').val();
+                    var date = $(this).find('.date').val();
+                    var timeStart = formatTime($(this).find('.timeStart').val());
+                    var timeEnd = formatTime($(this).find('.timeEnd').val());
+                    var location = $(this).find('.location').val();
+
+
+                    var orderDetail = {
+                        id: id,
+                        date: date,
+                        time_start: timeStart,
+                        time_end: timeEnd,
+                        location: location,
+                        id_order: orderEditVar
+
+
+                    };
+
+                    orderDetails.push(orderDetail);
+                });
+
+
+                // Construct the data object
+                var data = {
+                    order: {
+                        id: orderEditVar,
+                        description: description,
+                        id_client: sessionStorage.getItem('id')
+                    },
+                    orderDetails: orderDetails
+                };
+
+
+
+                // Make the AJAX PUT request
+                $.ajax({
+                    url: 'http://localhost:8084/order/data',
+                    type: 'PUT',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        // Handle the success response
+                        console.log(response);
+                        // Close the modal or perform any other actions
+                        $('#EditorderDetailsModal').modal('hide');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your order has been updated',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error response
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            var orderEditVar = 0;
             $(document).on('click', '.edit-btn', function() {
                 // Retrieve the order ID
-                var orderID = $(this).closest('tr').find('.expand-details').html();
+                orderEditVar = $(this).closest('tr').find('.expand-details').html();
                 // Make an AJAX GET request to retrieve the order and order details data
                 $.ajax({
                     url: 'http://localhost:8084/order/lists',
@@ -222,32 +298,59 @@
                     success: function(response) {
                         // Find the order with the matching order ID
                         var order = response.data.find(function(item) {
-                            return item.order.id == orderID;
+                            return item.order.id == orderEditVar;
                         });
 
                         if (order) {
-                            alert('Order found!');
+                            // alert('Order found!');
                             // Populate the form fields with the order data
-                            $('#orderIDField').val(order.order.id);
-                            $('#descriptionField').val(order.order.description);
+                            // $('#orderIDField').val(order.order.id);
+                            // $('#description2').val(order.order.description);
+                            var modalBody = $('#EditorderDetailsModal').find('.modal-body');
+                            modalBody.empty();
+                            modalBody.append('<label for="description2" class="form-label">Description:</label>');
+                            modalBody.append('<input type="text" id="description2" class="form-control" name="description" required>');
+                            $('#description2').val(order.order.description);
+
 
                             // Populate the order details table
                             var orderDetailsTable = $('#orderDetailsTable');
                             orderDetailsTable.empty();
 
                             order.orderDetails.forEach(function(orderDetail) {
-                                var row = $('<tr>');
-                                row.append('<td>' + orderDetail.id + '</td>');
-                                row.append('<td>' + orderDetail.date + '</td>');
-                                row.append('<td>' + orderDetail.time_start + '</td>');
-                                row.append('<td>' + orderDetail.time_end + '</td>');
-                                row.append('<td>' + orderDetail.location + '</td>');
+                                var row = $('<div class="row">');
+                                var col0 = $('<div class="col-md-3" style="display:none;">');
+                                col0.append('<label for="date" class="form-label">id:</label>');
+                                col0.append('<input type="text" class="form-control id" name="id[]" value="' + orderDetail.id + '" disabled>');
+                                row.append(col0);
+                                var col1 = $('<div class="col-md-3">');
+                                col1.append('<label for="date" class="form-label">Date:</label>');
+                                col1.append('<input type="date" class="form-control date" name="date[]" value="' + orderDetail.date + '" required>');
+                                row.append(col1);
 
-                                orderDetailsTable.append(row);
+                                var col2 = $('<div class="col-md-3">');
+                                col2.append('<label for="timeStart" class="form-label">Start Time:</label>');
+                                col2.append('<input type="time" class="form-control timeStart" name="timeStart[]" value="' + orderDetail.time_start + '" required>');
+                                row.append(col2);
+
+                                var col3 = $('<div class="col-md-3">');
+                                col3.append('<label for="timeEnd" class="form-label">End Time:</label>');
+                                col3.append('<input type="time" class="form-control timeEnd" name="timeEnd[]" value="' + orderDetail.time_end + '" required>');
+                                row.append(col3);
+
+                                var col4 = $('<div class="col-md-3">');
+                                col4.append('<label for="location" class="form-label">Location:</label>');
+                                col4.append('<input type="text" class="form-control location" name="location[]" value="' + orderDetail.location + '" required>');
+                                row.append(col4);
+
+                                modalBody.append(row);
                             });
+
 
                             // Show the edit modal
                             $('#EditorderDetailsModal').modal('show');
+                            modalBody.append('<div align="center"><br><button type="button" class="btn btn-primary" id="updateOrder">Update Order</button></div>');
+
                         }
                     },
                     error: function(xhr, status, error) {
@@ -371,6 +474,8 @@
 
                 detailContainer.appendChild(newDetail);
             }
+
+
 
             // Add event listener to the "Add More Details" button
             var addDetailBtn = document.getElementById('addDetailBtn');
