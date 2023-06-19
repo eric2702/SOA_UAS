@@ -113,7 +113,7 @@
                                     Description
                                 </th>
                                 <th class="text-white">
-                                    Edit
+                                    Action
                                 </th>
 
 
@@ -128,6 +128,36 @@
 
 
         </div>
+
+        <div class="modal fade" id="orderDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="EditorderDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditorderDetailsModalLabel">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </section>
     <!-- Section: Design Block -->
     <!-- Section: Design Block -->
@@ -139,43 +169,95 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
-            function format(order) {
-                var orderDetails = order.orderDetails;
-                var table = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
 
-                for (var i = 0; i < orderDetails.length; i++) {
-                    var orderDetail = orderDetails[i];
-                    table +=
-                        '<tr>' +
-                        '<td>Date: ' + orderDetail.date + '</td>' +
-                        '<td>Start Time: ' + orderDetail.time_start + '</td>' +
-                        '<td>End Time: ' + orderDetail.time_end + '</td>' +
-                        '<td>Location: ' + orderDetail.location + '</td>' +
-                        '</tr>';
-                }
-
-                table += '</table>';
-                return table;
-            }
 
             $(document).on('click', '.expand-details', function() {
+                var orderID = $(this).html();
 
-                var order = JSON.parse($(this).data('order'));
-                var row = $(this).closest('tr');
 
-                if (row.hasClass('shown')) {
-                    // Detail sudah ditampilkan, sekarang kita sembunyikan
-                    row.next().remove();
-                    row.removeClass('shown');
-                } else {
-                    // Detail belum ditampilkan, sekarang kita tambahkan
-                    row.after('<tr class="details-row"><td colspan="3">' + format(order) + '</td></tr>');
-                    row.addClass('shown');
-                }
+                // AJAX request to retrieve order details
+                $.ajax({
+                    url: 'http://localhost:8084/order/details/' + orderID,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            var orderDetails = response.data;
+
+                            // Populate the modal with order details
+                            var modalBody = $('#orderDetailsModal').find('.modal-body');
+                            modalBody.empty();
+
+                            // Iterate over order details and append them to the modal body
+                            for (var i = 0; i < orderDetails.length; i++) {
+                                var detail = orderDetails[i];
+
+                                var detailRow = '<p>Day: ' + (i + 1) + '</p>' + '<p>Date: ' + detail.date + '</p>' +
+                                    '<p>Time Start: ' + detail.time_start + '</p>' +
+                                    '<p>Time End: ' + detail.time_end + '</p>' +
+                                    '<p>Location: ' + detail.location + '</p>' +
+                                    '<hr>';
+                                modalBody.append(detailRow);
+                            }
+
+                            // Show the modal
+                            $('#orderDetailsModal').modal('show');
+                        } else {
+                            alert('Failed to retrieve order details.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred while retrieving order details.');
+                    }
+                });
+            });
+
+            $(document).on('click', '.edit-btn', function() {
+                // Retrieve the order ID
+                var orderID = $(this).closest('tr').find('.expand-details').html();
+                // Make an AJAX GET request to retrieve the order and order details data
+                $.ajax({
+                    url: 'http://localhost:8084/order/lists',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        // Find the order with the matching order ID
+                        var order = response.data.find(function(item) {
+                            return item.order.id == orderID;
+                        });
+
+                        if (order) {
+                            alert('Order found!');
+                            // Populate the form fields with the order data
+                            $('#orderIDField').val(order.order.id);
+                            $('#descriptionField').val(order.order.description);
+
+                            // Populate the order details table
+                            var orderDetailsTable = $('#orderDetailsTable');
+                            orderDetailsTable.empty();
+
+                            order.orderDetails.forEach(function(orderDetail) {
+                                var row = $('<tr>');
+                                row.append('<td>' + orderDetail.id + '</td>');
+                                row.append('<td>' + orderDetail.date + '</td>');
+                                row.append('<td>' + orderDetail.time_start + '</td>');
+                                row.append('<td>' + orderDetail.time_end + '</td>');
+                                row.append('<td>' + orderDetail.location + '</td>');
+
+                                orderDetailsTable.append(row);
+                            });
+
+                            // Show the edit modal
+                            $('#EditorderDetailsModal').modal('show');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
             });
 
             $.ajax({
-                url: "http://localhost:8084/order/lists",
+                url: "http://localhost:8084/order/list",
                 method: "GET",
                 success: function(response) {
                     var orderList = response.data;
@@ -185,20 +267,23 @@
 
                     // Loop through the orders and add them to the table
                     for (var i = 0; i < orderList.length; i++) {
-                        var order = orderList[i].order;
+                        var order = orderList[i];
                         var row = $("<tr></tr>");
 
-                        // alert(JSON.stringify(order));
+                        // alert(JSON.stringify(orderList[i].orderDetails));
+                        // var orderDetails = JSON.stringify(orderList[i].orderDetails).replace(/"/g, '');
+                        // alert(orderDetails);
+                        row.append('<td class="details-control"><button class="expand-details">' + order.id + '</button></td>');
 
-                        row.append('<td class="details-control"><span class="expand-details" data-order="' + JSON.stringify(order) + '">' + order.id + '</span></td>');
 
 
                         row.append("<td>" + order.description + "</td>");
-                        row.append('<td><button class="btn btn-primary">Edit</button></td>');
+                        row.append('<td><button class="btn btn-primary edit-btn">Edit</button></td>');
 
                         // Add the row to the table body
                         $("#orderListBody").append(row);
                     }
+
                     var table = $('#tableOrder').DataTable({
                         dom: 'lBfrtip',
                         responsive: true,
