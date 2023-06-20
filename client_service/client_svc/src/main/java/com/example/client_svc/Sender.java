@@ -1,12 +1,17 @@
 package com.example.client_svc;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -79,18 +84,19 @@ public class Sender implements CommandLineRunner {
     }
 
     @PutMapping("/client/data")
-    public ResponseEntity updateClientData(@RequestBody Client client) {
-        Client existingClient = clientRepository.findById(client.getId()).orElse(null);
-        if (existingClient == null) {
+    public ResponseEntity updateClientData(@RequestBody Map<String, Object> requestBody) {
+
+        Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
+
+        if (clientToUpdate.isEmpty()) {
             ApiResponse response = new ApiResponse(false, "Client does not exist");
             return ResponseEntity.badRequest().body(response);
         }
 
-        Client clientExists = clientRepository.findClientByEmail(client.getEmail());
-        if (clientExists != null) {
-            ApiResponse response = new ApiResponse(false, "Client already exists");
-            return ResponseEntity.badRequest().body(response);
-        }
+        // convert optional to client
+        Client client = clientToUpdate.get();
+        client.setName(requestBody.get("name").toString());
+
         // existingClient.setEmail(client.getEmail());
         // existingClient.setName(client.getName());
         // existingClient.setPassword(client.getPassword());
@@ -101,6 +107,44 @@ public class Sender implements CommandLineRunner {
         Map<String, Object> respData = new HashMap<>();
         respData.put("id", updatedClient.getId());
         ApiResponse response = new ApiResponse(true, "Client data updated successfully", respData);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/client/password")
+    public ResponseEntity updateClientPassword(@RequestBody Map<String, Object> requestBody) {
+
+        Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
+
+        if (clientToUpdate.isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Client does not exist");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // convert optional to client
+        Client client = clientToUpdate.get();
+
+        // get oldPassword and compare it with the one in the database
+        String oldPasswordRequest = requestBody.get("oldPassword").toString();
+        String oldPasswordRequestHash = encryptPassword(oldPasswordRequest);
+        String oldPasswordHash = client.getPassword();
+
+        if (!oldPasswordRequestHash.equals(oldPasswordHash)) {
+            ApiResponse response = new ApiResponse(false, "Old password is incorrect!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        client.setPassword(requestBody.get("newPassword").toString());
+
+        // existingClient.setEmail(client.getEmail());
+        // existingClient.setName(client.getName());
+        // existingClient.setPassword(client.getPassword());
+        Client updatedClient = clientService.updateClientData(client);
+        String clientJson = convertClientToJson(updatedClient);
+        rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
+
+        Map<String, Object> respData = new HashMap<>();
+        respData.put("id", updatedClient.getId());
+        ApiResponse response = new ApiResponse(true, "Client password updated successfully", respData);
         return ResponseEntity.ok(response);
     }
 
@@ -124,4 +168,44 @@ public class Sender implements CommandLineRunner {
         ApiResponse response = new ApiResponse(true, "Clients retrieved successfully", clientListWithoutPasswd);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/client/{id}")
+    public ResponseEntity getClientById(@PathVariable Long id) {
+        Optional<Client> optionalClient = clientService.getClientById(id);
+        if (optionalClient.isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Client not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        // client without password
+        Map<String, Object> clientWithoutPasswd = new HashMap<>();
+        clientWithoutPasswd.put("id", optionalClient.get().getId());
+        clientWithoutPasswd.put("name", optionalClient.get().getName());
+        clientWithoutPasswd.put("email", optionalClient.get().getEmail());
+
+        ApiResponse response = new ApiResponse(true, "Client retrieved successfully", clientWithoutPasswd);
+        return ResponseEntity.ok(response);
+    }
+
+    public static String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the byte array to a hexadecimal string representation
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -42,6 +42,10 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+    public Client getClientById(String id) {
+        return clientRepository.findById(Long.parseLong(id)).orElse(null);
+    }
+
     public static String encryptPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

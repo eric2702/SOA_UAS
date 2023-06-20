@@ -1,13 +1,18 @@
 package com.example.staff_svc;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -79,17 +84,17 @@ public class Sender implements CommandLineRunner {
     }
 
     @PutMapping("/staff/data")
-    public ResponseEntity updateStaffData(@RequestBody Staff staff) {
-        Staff existingStaff = staffRepository.findById(staff.getId()).orElse(null);
-        if (existingStaff == null) {
+    public ResponseEntity updateStaffData(@RequestBody Map<String, Object> requestBody) {
+        Optional<Staff> staffToUpdate = staffService.getStaffById(Long.parseLong(requestBody.get("id").toString()));
+
+        if (staffToUpdate.isEmpty()) {
             ApiResponse response = new ApiResponse(false, "Staff does not exist");
             return ResponseEntity.badRequest().body(response);
         }
-        Staff staffExists = staffRepository.findStaffByEmail(staff.getEmail());
-        if (staffExists != null) {
-            ApiResponse response = new ApiResponse(false, "Staff already exists");
-            return ResponseEntity.badRequest().body(response);
-        }
+
+        // convert optional to client
+        Staff staff = staffToUpdate.get();
+        staff.setName(requestBody.get("name").toString());
 
         Staff updatedStaff = staffService.updateStaffData(staff);
         String staffJson = convertStaffToJson(updatedStaff);
@@ -98,6 +103,41 @@ public class Sender implements CommandLineRunner {
         Map<String, Object> respData = new HashMap<>();
         respData.put("id", updatedStaff.getId());
         ApiResponse response = new ApiResponse(true, "Staff data updated successfully", respData);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/staff/password")
+    public ResponseEntity updateClientPassword(@RequestBody Map<String, Object> requestBody) {
+
+        Optional<Staff> staffToUpdate = staffService.getStaffById(Long.parseLong(requestBody.get("id").toString()));
+
+        if (staffToUpdate.isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Staff does not exist");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // convert optional to client
+        Staff staff = staffToUpdate.get();
+
+        // get oldPassword and compare it with the one in the database
+        String oldPasswordRequest = requestBody.get("oldPassword").toString();
+        String oldPasswordRequestHash = encryptPassword(oldPasswordRequest);
+        String oldPasswordHash = staff.getPassword();
+
+        if (!oldPasswordRequestHash.equals(oldPasswordHash)) {
+            ApiResponse response = new ApiResponse(false, "Old password is incorrect!");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        staff.setPassword(requestBody.get("newPassword").toString());
+
+        Staff updatedStaff = staffService.updateStaffData(staff);
+        String clientJson = convertStaffToJson(updatedStaff);
+        rabbitTemplate.convertAndSend(topicExchangeName, "staff.changed", clientJson);
+
+        Map<String, Object> respData = new HashMap<>();
+        respData.put("id", updatedStaff.getId());
+        ApiResponse response = new ApiResponse(true, "Staff password updated successfully", respData);
         return ResponseEntity.ok(response);
     }
 
@@ -116,4 +156,39 @@ public class Sender implements CommandLineRunner {
         ApiResponse response = new ApiResponse(true, "Staffs retrieved successfully", staffListWithoutPasswd);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/staff/{id}")
+    public ResponseEntity getStaffById(@PathVariable Long id) {
+        Optional<Staff> optionalStaff = staffService.getStaffById(id);
+        if (optionalStaff.isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Staff not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Staff staff = optionalStaff.get();
+        ApiResponse response = new ApiResponse(true, "Staff retrieved successfully", staff);
+        return ResponseEntity.ok(response);
+    }
+
+    public static String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            // Convert the byte array to a hexadecimal string representation
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
