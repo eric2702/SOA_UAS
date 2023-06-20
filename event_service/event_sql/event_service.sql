@@ -1,3 +1,11 @@
+-- KOLOM YANG PERLU
+-- event_id
+-- order_details_id
+-- time_start
+-- time_end
+-- description
+-- staff_id
+
 -- Create the database
 CREATE DATABASE eo_db;
 
