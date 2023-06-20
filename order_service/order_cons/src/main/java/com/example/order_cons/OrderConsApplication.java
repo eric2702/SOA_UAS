@@ -43,6 +43,11 @@ public class OrderConsApplication {
 	}
 
 	@Bean
+	Binding binding3(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("event.#");
+	}
+
+	@Bean
 	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
 			MessageListenerAdapter listenerAdapter, Queue queue) {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();

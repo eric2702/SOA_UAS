@@ -109,6 +109,8 @@ public class Sender implements CommandLineRunner {
         for (OrderDetails orderDetails : orderDetailsList) {
             orderDetailsRepository.save(orderDetails);
         }
+        // rabbitTemplate.convertAndSend(topicExchangeName, "order_details.new",
+        // convertOrderDetailsToJson(updatedOrder));
         ApiResponse apiResponse = new ApiResponse(true, "Order data updated successfully", updatedOrder);
         return ResponseEntity.ok(apiResponse);
     }

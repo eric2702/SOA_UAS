@@ -1,10 +1,3 @@
--- KOLOM YANG PERLU
--- event_id
--- order_details_id
--- time_start
--- time_end
--- description
--- staff_id
 
 -- Create the database
 CREATE DATABASE eo_db;
@@ -19,6 +12,14 @@ CREATE TABLE client (
     name VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE event (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    time_start TIME,
+    time_end TIME,
+    description VARCHAR(255),
+    staff_id INT,
+    order_details_id INT
+);
 
 CREATE TABLE staff (
     id INT AUTO_INCREMENT PRIMARY KEY,

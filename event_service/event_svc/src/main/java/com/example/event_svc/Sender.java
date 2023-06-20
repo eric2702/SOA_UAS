@@ -5,15 +5,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.example.event_svc.models.entities.Client;
-import com.example.event_svc.models.repos.ClientRepository;
-import com.example.event_svc.services.ClientService;
+import com.example.event_svc.helpers.response.ApiResponse;
+import com.example.event_svc.models.entities.Event;
+import com.example.event_svc.models.repos.EventRepository;
+import com.example.event_svc.services.EventService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 @Component
@@ -23,14 +25,14 @@ public class Sender implements CommandLineRunner {
     static final String topicExchangeName = "eo-exchange";
 
     private final RabbitTemplate rabbitTemplate;
-    private final ClientService clientService;
-    private final ClientRepository clientRepository;
+    private final EventService eventService;
+    private final EventRepository eventRepository;
 
     @Autowired
-    public Sender(RabbitTemplate rabbitTemplate, ClientService clientService, ClientRepository clientRepository) {
+    public Sender(RabbitTemplate rabbitTemplate, EventService eventService, EventRepository eventRepository) {
         this.rabbitTemplate = rabbitTemplate;
-        this.clientService = clientService;
-        this.clientRepository = clientRepository;
+        this.eventService = eventService;
+        this.eventRepository = eventRepository;
     }
 
     @Override
@@ -41,33 +43,58 @@ public class Sender implements CommandLineRunner {
     @GetMapping("/send/{message}")
     public String sendMessage(@PathVariable String message) {
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", message);
+        rabbitTemplate.convertAndSend(topicExchangeName, "event.new", message);
         return "Message sent: " + message;
     }
 
-    @PostMapping("/client/register")
-    public Client addClient(@RequestBody Client client) {
+    @PostMapping("/event/add")
+    public ResponseEntity addEvent(@RequestBody Event event) {
         System.out.println("Sending message...");
-        // check if client already exists
-        Client clientExists = clientRepository.findClientByEmail(client.getEmail());
-        if (clientExists != null) {
-            return clientExists;
+
+        Event new_event = eventService.addEvent(event);
+
+        rabbitTemplate.convertAndSend(topicExchangeName, "event.new", convertEventToJson(new_event));
+
+        ApiResponse apiResponse = new ApiResponse(true, "event added successfully", new_event);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PutMapping("/event/data")
+    public ResponseEntity updateEventData(@RequestBody Event event) {
+        Event updatedEvent = eventService.updateEventData(event);
+        ApiResponse apiResponse = new ApiResponse(true, "event updated successfully", updatedEvent);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/event/list")
+    public ResponseEntity getAllEvents() {
+        List<Event> events = eventService.getAllEvents();
+        ApiResponse apiResponse = new ApiResponse(true, "events retrieved successfully", events);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/event/{id}")
+    public ResponseEntity getEventById(@PathVariable Long id) {
+        Event event = eventService.getEventById(id).orElse(null);
+        ApiResponse apiResponse = new ApiResponse(true, "event retrieved successfully", event);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/event/order/{id}")
+    public ResponseEntity getEventByOrderId(@PathVariable Long id) {
+        Event event = eventRepository.findByOrderDetailsId(id);
+        ApiResponse apiResponse = new ApiResponse(true, "event retrieved successfully", event);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    private String convertEventToJson(Event event) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(event);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
         }
-        // convert client to json
-        Client new_client = clientService.addClient(client);
-
-        rabbitTemplate.convertAndSend(topicExchangeName, "foo.bar.baz", new_client.toString());
-
-        return new_client;
     }
 
-    @PutMapping("/client/data")
-    public Client updateClientData(@RequestBody Client client) {
-        return clientService.updateClientData(client);
-    }
-
-    @GetMapping("/client/list")
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
-    }
 }

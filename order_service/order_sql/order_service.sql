@@ -37,6 +37,14 @@ CREATE TABLE order_details (
     time_end TIME NOT NULL,
     location VARCHAR(255) NOT NULL
 );
+CREATE TABLE event (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    time_start TIME,
+    time_end TIME,
+    description VARCHAR(255),
+    staff_id INT,
+    order_details_id INT
+);
 
 -- Insert sample data into the orders table
 INSERT INTO orders (id_client, description) VALUES
