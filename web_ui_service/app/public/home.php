@@ -68,26 +68,30 @@
                         </div>
                         <div class="orderDetail mb-3">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="date" class="form-label">Date:</label>
                                     <input type="date" class="form-control date" name="date[]" required>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="timeStart" class="form-label">Start Time:</label>
                                     <input type="time" class="form-control timeStart" name="timeStart[]" required>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="timeEnd" class="form-label">End Time:</label>
                                     <input type="time" class="form-control timeEnd" name="timeEnd[]" required>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="location" class="form-label">Location:</label>
                                     <input type="text" class="form-control location" name="location[]" required>
                                 </div>
 
+                                <!-- <div class="col-md-1">
+
+                                    <button style="margin-top: 30px;" type="button" class="btn btn-danger removeRowBtn">&times;</button>
+                                </div> -->
 
                             </div>
                         </div>
@@ -169,6 +173,9 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
+            $(document).on('click', '.removeRowBtn', function() {
+                $(this).closest('.row').remove();
+            });
 
 
             $(document).on('click', '.expand-details', function() {
@@ -449,25 +456,29 @@
 
                 newDetail.innerHTML = `
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="date" class="form-label">Date:</label>
                         <input type="date" class="form-control date" name="date[]" required>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="timeStart" class="form-label">Start Time:</label>
                         <input type="time" class="form-control timeStart" name="timeStart[]" required>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="timeEnd" class="form-label">End Time:</label>
                         <input type="time" class="form-control timeEnd" name="timeEnd[]" required>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="location" class="form-label">Location:</label>
                         <input type="text" class="form-control location" name="location[]" required>
                     </div>
+                    <div class="col-md-1">
+                        <button style="margin-top: 30px;" type="button" class="btn btn-danger removeRowBtn">&times;</button>
+                    </div>
+
 
                 </div>
             `;
