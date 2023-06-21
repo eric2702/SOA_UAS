@@ -501,7 +501,7 @@
                 for (var i = 0; i < detailElements.length; i++) {
                     var detailElement = detailElements[i];
                     var timeStartValue = detailElement.querySelector('.timeStart').value;
-                    alert(timeStartValue);
+                    // alert(timeStartValue);
                     var timeEndValue = detailElement.querySelector('.timeEnd').value;
                     // alert(detailElement.querySelector('.location').value);
                     var orderDetail = {
@@ -515,8 +515,9 @@
 
                     // alert(JSON.stringify(orderDetail));
                     jsonData.push(orderDetail);
+                    // alert(JSON.stringify(jsonData));
                 }
-                alert(JSON.stringify(jsonData));
+
                 $.ajax({
                     url: "http://localhost:8086/event/add/multiple",
                     method: "POST",
@@ -526,7 +527,7 @@
 
                         Swal.fire('Success', 'Order added successfully!', 'success');
                         // reset the values in the form
-                        $('#addEventForm')[0].reset();
+
 
 
                         $('#addEventModal').modal('hide');
