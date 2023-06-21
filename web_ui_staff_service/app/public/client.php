@@ -401,10 +401,14 @@
 
 
                 },
-                error: function(error) {
+                error: function(xhr, status, error) {
                     console.log(error);
-                    Swal.fire('Error', 'Failed to add the order. Please try again.',
-                        'error');
+                    var err = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message
+                    });
                 }
 
             });

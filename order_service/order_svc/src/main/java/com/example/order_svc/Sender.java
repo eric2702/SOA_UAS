@@ -97,6 +97,21 @@ public class Sender implements CommandLineRunner {
         Order order = orderRequest.getOrder();
         List<OrderDetails> orderDetailsList = orderRequest.getOrderDetails();
 
+        // check if order attributes are empty
+        if (order.getDescription().toString().isEmpty() || order.getTimestamp() == null) {
+            ApiResponse apiResponse = new ApiResponse(false, "Order attributes cannot be empty", null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        // check if order details are empty
+        for (OrderDetails orderDetails : orderDetailsList) {
+            if (orderDetails.getDate() == null || orderDetails.getLocation().toString().isEmpty()
+                    || orderDetails.getTime_end() == null || orderDetails.getTime_start() == null) {
+                ApiResponse apiResponse = new ApiResponse(false, "Order details cannot be empty", null);
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+        }
+
         Order newOrder = orderService.addOrder(order);
         Long newOrderId = newOrder.getId();
 
@@ -120,6 +135,21 @@ public class Sender implements CommandLineRunner {
         Order updatedOrder = orderService.updateOrderData(order);
         // and also update order details
         List<OrderDetails> orderDetailsList = orderRequest.getOrderDetails();
+
+        // check if order attributes are empty
+        if (order.getDescription().toString().isEmpty() || order.getTimestamp() == null) {
+            ApiResponse apiResponse = new ApiResponse(false, "Order attributes cannot be empty", null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        // check if order details are empty
+        for (OrderDetails orderDetails : orderDetailsList) {
+            if (orderDetails.getDate() == null || orderDetails.getLocation().toString().isEmpty()
+                    || orderDetails.getTime_end() == null || orderDetails.getTime_start() == null) {
+                ApiResponse apiResponse = new ApiResponse(false, "Order details cannot be empty", null);
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+        }
         for (OrderDetails orderDetails : orderDetailsList) {
             orderDetailsRepository.save(orderDetails);
         }
