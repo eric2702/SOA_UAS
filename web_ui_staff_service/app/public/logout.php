@@ -1,7 +1,6 @@
-<?php
-
-session_start();
-session_destroy();
-
-header("Location: index.php");
-exit;
+<script>
+//clear session storage
+sessionStorage.clear();
+//redirect to login page
+window.location.href = "index.php";
+</script>

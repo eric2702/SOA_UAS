@@ -102,6 +102,25 @@ public class Sender implements CommandLineRunner {
         return ResponseEntity.ok(apiResponse);
     }
 
+    // event update multiple
+    @PutMapping("/event/data/multiple")
+    public ResponseEntity updateMultipleEventData(@RequestBody List<Event> events) {
+        // check if event fields are empty
+        for (Event event : events) {
+            if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
+                    || event.getTime_start() == null) {
+                ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+        }
+        List<Event> updatedEvents = eventService.addMultipleEvents(events);
+        for (Event event : updatedEvents) {
+            rabbitTemplate.convertAndSend(topicExchangeName, "event.changed", convertEventToJson(event));
+        }
+        ApiResponse apiResponse = new ApiResponse(true, "events updated successfully", updatedEvents);
+        return ResponseEntity.ok(apiResponse);
+    }
+
     @GetMapping("/event/list")
     public ResponseEntity getAllEvents() {
         List<Event> events = eventService.getAllEvents();

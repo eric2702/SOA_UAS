@@ -116,6 +116,10 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
         </script>
         <script>
+        //if session storage is empty, redirect to login page
+        if (sessionStorage.getItem("id") == null) {
+            window.location.href = "http://localhost/index.php";
+        }
         $(document).ready(function() {
             // Fetch data from localhost:8080/client/{id}
             //get the id from the session
