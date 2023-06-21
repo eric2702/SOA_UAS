@@ -35,4 +35,9 @@ public class EventService {
     public Event updateEventData(Event event) {
         return eventRepository.save(event);
     }
+
+    // addMultipleEvents
+    public List<Event> addMultipleEvents(List<Event> events) {
+        return eventRepository.saveAll(events);
+    }
 }

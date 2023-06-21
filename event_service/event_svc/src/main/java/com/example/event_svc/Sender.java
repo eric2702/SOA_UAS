@@ -59,6 +59,20 @@ public class Sender implements CommandLineRunner {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @PostMapping("/event/add/multiple")
+    public ResponseEntity addMultipleEvents(@RequestBody List<Event> events) {
+        System.out.println("Sending message...");
+
+        List<Event> new_events = eventService.addMultipleEvents(events);
+
+        for (Event event : new_events) {
+            rabbitTemplate.convertAndSend(topicExchangeName, "event.new", convertEventToJson(event));
+        }
+
+        ApiResponse apiResponse = new ApiResponse(true, "events added successfully", new_events);
+        return ResponseEntity.ok(apiResponse);
+    }
+
     @PutMapping("/event/data")
     public ResponseEntity updateEventData(@RequestBody Event event) {
         Event updatedEvent = eventService.updateEventData(event);
