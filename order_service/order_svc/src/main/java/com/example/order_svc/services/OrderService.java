@@ -35,4 +35,8 @@ public class OrderService {
     public Order updateOrderData(Order order) {
         return orderRepository.save(order);
     }
+
+    public List<Order> getOrdersByCustomerId(Long customerId) {
+        return orderRepository.findOrderByClientId(customerId);
+    }
 }

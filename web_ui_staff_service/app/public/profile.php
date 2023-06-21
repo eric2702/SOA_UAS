@@ -46,12 +46,10 @@
             </div>
 
             <form id="clientForm" class="">
-                <fieldset disabled>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
-                        <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
-                    </div>
-                </fieldset>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
+                    <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
+                </div>
 
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Name</label>
@@ -135,6 +133,7 @@
 
                     var formData = {
                         name: $('#staff-name').val(),
+                        email: $('#staff-email').val(),
                         id: id_staff,
                     };
                     $.ajax({
