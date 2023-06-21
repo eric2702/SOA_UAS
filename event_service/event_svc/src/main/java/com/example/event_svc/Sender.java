@@ -171,8 +171,10 @@ public class Sender implements CommandLineRunner {
             System.out.println(data.getId());
             data.setDisplay_order(Long.valueOf(i));
             eventRepository.save(data);
+            rabbitTemplate.convertAndSend(topicExchangeName, "event.changed", convertEventToJson(data));
             i++;
         }
+
         ApiResponse apiResponse = new ApiResponse(true, "event order updated successfully", null);
         return ResponseEntity.ok(apiResponse);
     }

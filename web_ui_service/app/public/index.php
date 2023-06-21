@@ -7,109 +7,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title>Client - Login</title>
 </head>
 <style>
-.background-radial-gradient {
-    background-color: hsl(218, 41%, 15%);
-    background-image: radial-gradient(650px circle at 0% 0%,
-            hsl(218, 41%, 35%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%),
-        radial-gradient(1250px circle at 100% 100%,
-            hsl(218, 41%, 45%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%);
-}
-
-#radius-shape-1 {
-    height: 220px;
-    width: 220px;
-    top: -60px;
-    left: -130px;
-    background: radial-gradient(#44006b, #ad1fff);
-    overflow: hidden;
-}
-
-#radius-shape-2 {
-    border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
-    bottom: -60px;
-    right: -110px;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(#44006b, #ad1fff);
-    overflow: hidden;
-}
-
-.bg-glass {
-    background-color: hsla(0, 0%, 100%, 0.9) !important;
-    backdrop-filter: saturate(200%) blur(25px);
-}
-
-.title-word {
-    animation: color-animation 4s linear infinite;
-}
-
-.title-word-1 {
-    --color-1: #DF8453;
-    --color-2: #3D8DAE;
-    --color-3: #E4A9A8;
-}
-
-.title-word-2 {
-    --color-1: #DBAD4A;
-    --color-2: #ACCFCB;
-    --color-3: #17494D;
-}
-
-.title-word-3 {
-    --color-1: #ACCFCB;
-    --color-2: #E4A9A8;
-    --color-3: #ACCFCB;
-}
-
-.title-word-4 {
-    --color-1: #3D8DAE;
-    --color-2: #DF8453;
-    --color-3: #E4A9A8;
-}
-
-@keyframes color-animation {
-    0% {
-        color: var(--color-1)
+    .background-radial-gradient {
+        background-color: hsl(218, 41%, 15%);
+        background-image: radial-gradient(650px circle at 0% 0%,
+                hsl(218, 41%, 35%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%),
+            radial-gradient(1250px circle at 100% 100%,
+                hsl(218, 41%, 45%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%);
     }
 
-    32% {
-        color: var(--color-1)
+    #radius-shape-1 {
+        height: 220px;
+        width: 220px;
+        top: -60px;
+        left: -130px;
+        background: radial-gradient(#44006b, #ad1fff);
+        overflow: hidden;
     }
 
-    33% {
-        color: var(--color-2)
+    #radius-shape-2 {
+        border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+        bottom: -60px;
+        right: -110px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(#44006b, #ad1fff);
+        overflow: hidden;
     }
 
-    65% {
-        color: var(--color-2)
+    .bg-glass {
+        background-color: hsla(0, 0%, 100%, 0.9) !important;
+        backdrop-filter: saturate(200%) blur(25px);
     }
 
-    66% {
-        color: var(--color-3)
+    .title-word {
+        animation: color-animation 4s linear infinite;
     }
 
-    99% {
-        color: var(--color-3)
+    .title-word-1 {
+        --color-1: #DF8453;
+        --color-2: #3D8DAE;
+        --color-3: #E4A9A8;
     }
 
-    100% {
-        color: var(--color-1)
+    .title-word-2 {
+        --color-1: #DBAD4A;
+        --color-2: #ACCFCB;
+        --color-3: #17494D;
     }
-}
+
+    .title-word-3 {
+        --color-1: #ACCFCB;
+        --color-2: #E4A9A8;
+        --color-3: #ACCFCB;
+    }
+
+    .title-word-4 {
+        --color-1: #3D8DAE;
+        --color-2: #DF8453;
+        --color-3: #E4A9A8;
+    }
+
+    @keyframes color-animation {
+        0% {
+            color: var(--color-1)
+        }
+
+        32% {
+            color: var(--color-1)
+        }
+
+        33% {
+            color: var(--color-2)
+        }
+
+        65% {
+            color: var(--color-2)
+        }
+
+        66% {
+            color: var(--color-3)
+        }
+
+        99% {
+            color: var(--color-3)
+        }
+
+        100% {
+            color: var(--color-1)
+        }
+    }
 </style>
 
 <body>
@@ -169,6 +168,10 @@
                                     <label class="form-label" for="form3Example4">Password</label>
                                     <input type="password" id="form3Example4" class="form-control" />
                                 </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example7">Confirm Password</label>
+                                    <input type="password" id="confirm_password" class="form-control" />
+                                </div>
 
                                 <div align="center">
                                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submitregister">
@@ -180,8 +183,7 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Already have an account? <span
-                                            style="text-decoration: underline; cursor:pointer;" id="signin-link">Sign in
+                                    <p>Already have an account? <span style="text-decoration: underline; cursor:pointer;" id="signin-link">Sign in
                                             here</span></p>
                                     <br>
                                 </div>
@@ -204,10 +206,7 @@
                                     <input type="password" id="form3Example7" class="form-control" />
                                 </div>
 
-                                <div class="form-outline mb-4">
-                                    <label class="form-label" for="form3Example7">Confirm Password</label>
-                                    <input type="password" id="confirm_password" class="form-control" />
-                                </div>
+
 
                                 <div align="center">
                                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submitsignin">
@@ -219,8 +218,7 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Don't have an account? <span style="text-decoration: underline; cursor:pointer;"
-                                            id="register-link">Register here</span></p>
+                                    <p>Don't have an account? <span style="text-decoration: underline; cursor:pointer;" id="register-link">Register here</span></p>
                                     <br>
                                 </div>
                                 <br>
@@ -237,147 +235,146 @@
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <script>
-    if (sessionStorage.getItem("id") != null) {
-        window.location.href = "http://localhost/home.php";
-    }
-    $(document).ready(function() {
-        // Register link click event handler
-        $("#register-link").click(function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            $("#registerform").show(); // Display the register form
-            $("#loginform").hide();
+        if (sessionStorage.getItem("id") != null) {
+            window.location.href = "http://localhost/home.php";
+        }
+        $(document).ready(function() {
+            // Register link click event handler
+            $("#register-link").click(function(e) {
+                e.preventDefault(); // Prevent default link behavior
+                $("#registerform").show(); // Display the register form
+                $("#loginform").hide();
 
-        });
-        $("#signin-link").click(function(e) {
-            e.preventDefault(); // Prevent default link behavior
+            });
+            $("#signin-link").click(function(e) {
+                e.preventDefault(); // Prevent default link behavior
 
-            $("#registerform").hide(); // Display the register form
-            $("#loginform").show();
-        });
+                $("#registerform").hide(); // Display the register form
+                $("#loginform").show();
+            });
 
-        $("#submitregister").click(function(e) {
-            e.preventDefault(); // Prevent default form submission
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You want to register with these data?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var name = $("#form3Example2").val();
-                    var email = $("#form3Example3").val();
-                    var password = $("#form3Example4").val();
-                    var confirm_password = $("#confirm_password").val();
+            $("#submitregister").click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to register with these data?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var name = $("#form3Example2").val();
+                        var email = $("#form3Example3").val();
+                        var password = $("#form3Example4").val();
+                        var confirm_password = $("#confirm_password").val();
 
-                    // Create an object with the form data
-                    var formData = {
-                        name: name,
-                        email: email,
-                        password: password,
-                    };
+                        // Create an object with the form data
+                        var formData = {
+                            name: name,
+                            email: email,
+                            password: password,
+                        };
 
-                    //if password and confirm password are not same
-                    if (password != confirm_password) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Password and Confirm Password are not same!',
-                        });
-                        return;
-                    }
-
-                    // Make a POST request to http://localhost:8080/client/register with the form data
-                    $.ajax({
-                        url: "http://localhost:8080/client/register",
-                        method: "POST",
-                        data: JSON.stringify(
-                            formData), // Serialize the form data as JSON
-                        contentType: "application/json", // Set the content type as JSON
-                        success: function(response) {
-                            // Handle success response
-                            console.log("Registration successful");
-                            console.log(response);
-                            // Redirect to another page or display a success message
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: response.message
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.log("Registration failed");
-                            console.log(error);
-                            // Display an error message
-                            //get the error message
-                            var err = JSON.parse(xhr.responseText);
+                        //if password and confirm password are not same
+                        if (password != confirm_password) {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Error',
-                                text: err.message
+                                title: 'Oops...',
+                                text: 'Password and Confirm Password are not same!',
                             });
+                            return;
                         }
-                    });
-                }
-            });
-        });
 
-        $("#submitsignin").click(function(e) {
-            e.preventDefault(); // Prevent default form submission
-
-
-
-            var email = $("#form3Example6").val();
-            var password = $("#form3Example7").val();
-
-            // Create an object with the form data
-            var formData = {
-                email: email,
-                password: password
-            };
-
-
-            $.ajax({
-                url: "http://localhost:8088/client/login",
-                method: "POST",
-                data: JSON.stringify(formData), // Serialize the form data as JSON
-                contentType: "application/json", // Set the content type as JSON
-                success: function(response) {
-                    // Handle success response
-                    console.log("Login successful");
-                    console.log(response);
-                    sessionStorage.setItem('id', response.data.id);
-
-                    window.location.href = "home.php";
-                    // Redirect to another page or display a success message
-                },
-                error: function(xhr, status, error) {
-                    // Handle error response
-                    console.log("Login failed");
-                    console.log(error);
-                    // Display an error message
-                    //get the error message
-                    var err = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: err.message
-                    });
-                }
+                        // Make a POST request to http://localhost:8080/client/register with the form data
+                        $.ajax({
+                            url: "http://localhost:8080/client/register",
+                            method: "POST",
+                            data: JSON.stringify(
+                                formData), // Serialize the form data as JSON
+                            contentType: "application/json", // Set the content type as JSON
+                            success: function(response) {
+                                // Handle success response
+                                console.log("Registration successful");
+                                console.log(response);
+                                // Redirect to another page or display a success message
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle error response
+                                console.log("Registration failed");
+                                console.log(error);
+                                // Display an error message
+                                //get the error message
+                                var err = JSON.parse(xhr.responseText);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: err.message
+                                });
+                            }
+                        });
+                    }
+                });
             });
 
+            $("#submitsignin").click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+
+
+                var email = $("#form3Example6").val();
+                var password = $("#form3Example7").val();
+
+                // Create an object with the form data
+                var formData = {
+                    email: email,
+                    password: password
+                };
+
+
+                $.ajax({
+                    url: "http://localhost:8088/client/login",
+                    method: "POST",
+                    data: JSON.stringify(formData), // Serialize the form data as JSON
+                    contentType: "application/json", // Set the content type as JSON
+                    success: function(response) {
+                        // Handle success response
+                        console.log("Login successful");
+                        console.log(response);
+                        sessionStorage.setItem('id', response.data.id);
+
+                        window.location.href = "home.php";
+                        // Redirect to another page or display a success message
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.log("Login failed");
+                        console.log(error);
+                        // Display an error message
+                        //get the error message
+                        var err = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: err.message
+                        });
+                    }
+                });
+
+
+            });
+
 
         });
-
-
-    });
     </script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
