@@ -96,11 +96,12 @@ public class Sender implements CommandLineRunner {
         // convert optional to client
         Client client = clientToUpdate.get();
         client.setName(requestBody.get("name").toString());
+        client.setEmail(requestBody.get("email").toString());
 
         // existingClient.setEmail(client.getEmail());
         // existingClient.setName(client.getName());
         // existingClient.setPassword(client.getPassword());
-        Client updatedClient = clientService.updateClientData(client);
+        Client updatedClient = clientRepository.save(client);
         String clientJson = convertClientToJson(updatedClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
 

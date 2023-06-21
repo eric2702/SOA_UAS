@@ -155,24 +155,41 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="eventsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="editStaffModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Edit Staff</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <div class="d-flex justify-content-end">
+
+                    </div>
+
+                    <form id="clientForm" class="">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
+                            <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="staff-name">
+                        </div>
+                        <!-- hidden form for setting id -->
+                        <input type="hidden" id="staff-modal-id" value="">
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
+                    <button type="button" class="btn btn-primary" id="edit-staff-submit">Submit</button>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Section: Design Block -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -242,7 +259,12 @@
                     // );
 
                     // Add the row to the table body
-                    row.append('<td><button class="btn btn-primary edit-btn">Edit</button></td>');
+                    row.append(
+                        '<td><button class="btn btn-primary edit-btn edit-staff" staff-id="' +
+                        client.id + '">Edit</button></td>'
+                    );
+
+
                     $("#orderListBody").append(row);
                 }
 
@@ -340,6 +362,67 @@
                     alert('An error occurred while retrieving order details.');
                 }
             });
+        });
+
+        $(document).on('click', '.edit-staff', function() {
+            var staffID = $(this).attr("staff-id");
+
+            // AJAX request to retrieve order details
+            $.ajax({
+                url: 'http://localhost:8082/staff/' + staffID,
+                method: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        var staff = response.data;
+                        console.log(staff)
+                        // Populate the modal with order details
+                        var modalBody = $('#editStaffModal').find('.modal-body');
+                        // modalBody.empty();
+
+                        $('#staff-email').val(response.data.email);
+                        $('#staff-name').val(response.data.name);
+                        $('#staff-modal-id').val(staffID)
+
+                        // Show the modal
+                        $('#editStaffModal').modal('show');
+                    } else {
+                        alert('Failed to retrieve order details.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred while retrieving order details.');
+                }
+            });
+        });
+
+        $('#edit-staff-submit').click(function() {
+            // Perform the edit action
+            // You can add your logic here to handle the edit action, such as making an AJAX request to update the data
+
+            var formData = {
+                name: $('#staff-name').val(),
+                email: $('#staff-email').val(),
+                id: $('#staff-modal-id').val(),
+            };
+            $.ajax({
+                url: "http://localhost:8082/staff/data",
+                method: "PUT",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data updated successfully'
+                    }).then(function() {
+                        window.location.href =
+                            "http://localhost:81/manage-staff.php";
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            })
         });
 
         function addDetailFields() {

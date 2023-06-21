@@ -48,9 +48,9 @@ CREATE TABLE event (
 
 -- Insert sample data into the orders table
 INSERT INTO orders (id_client, description) VALUES
-(1, 'Order 1 description'),
-(2, 'Order 2 description'),
-(3, 'Order 3 description');
+(4, 'Order 1 description'),
+(4, 'Order 2 description'),
+(4, 'Order 3 description');
 
 -- Insert sample data into the order_details table
 INSERT INTO order_details (id_order, date, time_start, time_end, location) VALUES

@@ -95,8 +95,9 @@ public class Sender implements CommandLineRunner {
         // convert optional to client
         Staff staff = staffToUpdate.get();
         staff.setName(requestBody.get("name").toString());
+        staff.setEmail(requestBody.get("email").toString());
 
-        Staff updatedStaff = staffService.updateStaffData(staff);
+        Staff updatedStaff = staffRepository.save(staff);
         String staffJson = convertStaffToJson(updatedStaff);
         rabbitTemplate.convertAndSend(topicExchangeName, "staff.changed", staffJson);
 
