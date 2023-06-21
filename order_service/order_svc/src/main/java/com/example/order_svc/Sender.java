@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.order_svc.helpers.response.ApiResponse;
 import com.example.order_svc.models.entities.Client;
+import com.example.order_svc.models.entities.Event;
 import com.example.order_svc.models.entities.Order;
 import com.example.order_svc.models.entities.OrderDetails;
 import com.example.order_svc.models.entities.OrderRequest;
@@ -20,6 +21,7 @@ import com.example.order_svc.models.repos.ClientRepository;
 import com.example.order_svc.models.repos.OrderDetailsRepository;
 import com.example.order_svc.models.repos.OrderRepository;
 import com.example.order_svc.services.ClientService;
+import com.example.order_svc.services.EventService;
 import com.example.order_svc.services.OrderDetailsService;
 import com.example.order_svc.services.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,6 +43,7 @@ public class Sender implements CommandLineRunner {
     private final OrderDetailsService orderDetailsService;
     private final ClientRepository clientRepository;
     private final ClientService clientService;
+    private final EventService eventService;
 
     private String convertOrderToJson(Order order) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -65,7 +68,7 @@ public class Sender implements CommandLineRunner {
     @Autowired
     public Sender(RabbitTemplate rabbitTemplate, OrderService orderService, OrderRepository orderRepository,
             OrderDetailsRepository orderDetailsRepository, OrderDetailsService orderDetailsService,
-            ClientRepository clientRepository, ClientService clientService) {
+            ClientRepository clientRepository, ClientService clientService, EventService eventService) {
         this.rabbitTemplate = rabbitTemplate;
         this.orderService = orderService;
         this.orderRepository = orderRepository;
@@ -73,6 +76,7 @@ public class Sender implements CommandLineRunner {
         this.orderDetailsService = orderDetailsService;
         this.clientRepository = clientRepository;
         this.clientService = clientService;
+        this.eventService = eventService;
     }
 
     @Override
@@ -143,7 +147,20 @@ public class Sender implements CommandLineRunner {
     @GetMapping("/order/details/{order_id}")
     public ResponseEntity getOrderDetailsById(@PathVariable Long order_id) {
         List<OrderDetails> orderDetails = orderDetailsService.getOrderDetailsById_order(order_id);
-        ApiResponse apiResponse = new ApiResponse(true, "Order details retrieved successfully", orderDetails);
+        List<Map<String, Object>> orderDetailsWithEvent = new ArrayList<>();
+
+        for (OrderDetails orderDetail : orderDetails) {
+            Long orderDetailsId = orderDetail.getId();
+            List<Event> events = eventService.findByOrderDetailsId(orderDetailsId);
+
+            Map<String, Object> orderDetailsMap = new HashMap<>();
+            orderDetailsMap.put("orderDetails", orderDetail);
+            orderDetailsMap.put("event", events);
+
+            orderDetailsWithEvent.add(orderDetailsMap);
+        }
+
+        ApiResponse apiResponse = new ApiResponse(true, "Order details retrieved successfully", orderDetailsWithEvent);
         return ResponseEntity.ok(apiResponse);
     }
 
