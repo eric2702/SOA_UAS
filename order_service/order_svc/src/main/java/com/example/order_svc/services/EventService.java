@@ -43,6 +43,6 @@ public class EventService {
 
     // findByOrderDetailsId
     public List<Event> findByOrderDetailsId(Long orderDetailsId) {
-        return eventRepository.findByOrderDetailsId(orderDetailsId);
+        return eventRepository.findByOrderDetailsIdOrderByDisplayOrder(orderDetailsId);
     }
 }

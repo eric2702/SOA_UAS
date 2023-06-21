@@ -22,17 +22,20 @@ public class Event {
     private Long staff_id;
     @Column(name = "order_details_id")
     private Long orderDetailsId;
+    private Long display_order;
 
     public Event() {
     }
 
-    public Event(Long id, Time time_start, Time time_end, String description, Long staff_id, Long orderDetailsId) {
+    public Event(Long id, Time time_start, Time time_end, String description, Long staff_id, Long orderDetailsId,
+            Long display_order) {
         this.id = id;
         this.time_start = time_start;
         this.time_end = time_end;
         this.description = description;
         this.staff_id = staff_id;
         this.orderDetailsId = orderDetailsId;
+        this.display_order = display_order;
     }
 
     public Long getId() {
@@ -81,6 +84,14 @@ public class Event {
 
     public void setOrderDetailsId(Long orderDetailsId) {
         this.orderDetailsId = orderDetailsId;
+    }
+
+    public Long getDisplay_order() {
+        return display_order;
+    }
+
+    public void setDisplay_order(Long display_order) {
+        this.display_order = display_order;
     }
 
 }

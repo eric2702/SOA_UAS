@@ -11,6 +11,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     // find event by order details id
     // Event findEventByOrderDetailsId(Long orderDetailsId);
-    List<Event> findByOrderDetailsId(Long orderDetailsId);
+
+    // find event by order details id sorting by display order
+    List<Event> findByOrderDetailsIdOrderByDisplayOrder(Long orderDetailsId);
+    // List<Event> findByOrderDetailsId(Long orderDetailsId);
 
 }

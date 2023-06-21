@@ -1,5 +1,7 @@
 package com.example.event_svc;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -150,6 +152,29 @@ public class Sender implements CommandLineRunner {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @PostMapping("/event/update-order")
+    public ResponseEntity updateEventOrder(@RequestBody Long[] arrayIds) {
+        List<Long> idsList = Arrays.asList(arrayIds);
+        List<Event> allData = eventRepository.findAllById(idsList);
+
+        // Sort allData based on the order of arrayIds
+        allData.sort(Comparator.comparing(event -> {
+            long eventId = event.getId();
+            return idsList.indexOf(eventId);
+        }));
+        System.out.println(idsList);
+
+        int i = 1;
+        for (Event data : allData) {
+            System.out.println(data.getId());
+            data.setDisplay_order(Long.valueOf(i));
+            eventRepository.save(data);
+            i++;
+        }
+        ApiResponse apiResponse = new ApiResponse(true, "event order updated successfully", null);
+        return ResponseEntity.ok(apiResponse);
     }
 
 }

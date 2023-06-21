@@ -18,7 +18,8 @@ CREATE TABLE event (
     time_end TIME,
     description VARCHAR(255),
     staff_id INT,
-    order_details_id INT
+    order_details_id INT,
+    display_order INT
 );
 
 CREATE TABLE staff (
