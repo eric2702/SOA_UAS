@@ -49,6 +49,13 @@ public class Sender implements CommandLineRunner {
 
     @PostMapping("/event/add")
     public ResponseEntity addEvent(@RequestBody Event event) {
+
+        // check if event fields are empty
+        if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
+                || event.getTime_start() == null) {
+            ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
         System.out.println("Sending message...");
 
         Event new_event = eventService.addEvent(event);
@@ -63,6 +70,15 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity addMultipleEvents(@RequestBody List<Event> events) {
         System.out.println("Sending message...");
 
+        // check if event fields are empty
+        for (Event event : events) {
+            if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
+                    || event.getTime_start() == null) {
+                ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
+                return ResponseEntity.badRequest().body(apiResponse);
+            }
+        }
+
         List<Event> new_events = eventService.addMultipleEvents(events);
 
         for (Event event : new_events) {
@@ -75,6 +91,12 @@ public class Sender implements CommandLineRunner {
 
     @PutMapping("/event/data")
     public ResponseEntity updateEventData(@RequestBody Event event) {
+        // check if event fields are empty
+        if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
+                || event.getTime_start() == null) {
+            ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
         Event updatedEvent = eventService.updateEventData(event);
         ApiResponse apiResponse = new ApiResponse(true, "event updated successfully", updatedEvent);
         return ResponseEntity.ok(apiResponse);

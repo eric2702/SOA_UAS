@@ -68,6 +68,12 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity addClient(@RequestBody Client client) {
         System.out.println("Sending message...");
 
+        // check if any of the fields are empty
+        if (client.getName().isEmpty() || client.getEmail().isEmpty() || client.getPassword().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Client clientExists = clientRepository.findClientByEmail(client.getEmail());
         if (clientExists != null) {
             ApiResponse response = new ApiResponse(false, "Client already exists");
@@ -85,6 +91,12 @@ public class Sender implements CommandLineRunner {
 
     @PutMapping("/client/data")
     public ResponseEntity updateClientData(@RequestBody Map<String, Object> requestBody) {
+
+        // if name or email is empty
+        if (requestBody.get("name").toString().isEmpty() || requestBody.get("email").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
 
@@ -113,6 +125,13 @@ public class Sender implements CommandLineRunner {
 
     @PutMapping("/client/password")
     public ResponseEntity updateClientPassword(@RequestBody Map<String, Object> requestBody) {
+
+        // if old password or new password is empty
+        if (requestBody.get("oldPassword").toString().isEmpty()
+                || requestBody.get("newPassword").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
 

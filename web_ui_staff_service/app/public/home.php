@@ -395,8 +395,14 @@
                     });
 
                 },
-                error: function(error) {
+                error: function(xhr, status, error) {
                     console.log(error);
+                    var err = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message
+                    });
                 }
             });
 
