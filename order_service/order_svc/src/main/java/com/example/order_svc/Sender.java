@@ -17,6 +17,7 @@ import com.example.order_svc.models.entities.Event;
 import com.example.order_svc.models.entities.Order;
 import com.example.order_svc.models.entities.OrderDetails;
 import com.example.order_svc.models.entities.OrderRequest;
+import com.example.order_svc.models.entities.Staff;
 import com.example.order_svc.models.repos.ClientRepository;
 import com.example.order_svc.models.repos.OrderDetailsRepository;
 import com.example.order_svc.models.repos.OrderRepository;
@@ -24,6 +25,7 @@ import com.example.order_svc.services.ClientService;
 import com.example.order_svc.services.EventService;
 import com.example.order_svc.services.OrderDetailsService;
 import com.example.order_svc.services.OrderService;
+import com.example.order_svc.services.StaffService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,6 +46,7 @@ public class Sender implements CommandLineRunner {
     private final ClientRepository clientRepository;
     private final ClientService clientService;
     private final EventService eventService;
+    private final StaffService staffService;
 
     private String convertOrderToJson(Order order) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -68,7 +71,8 @@ public class Sender implements CommandLineRunner {
     @Autowired
     public Sender(RabbitTemplate rabbitTemplate, OrderService orderService, OrderRepository orderRepository,
             OrderDetailsRepository orderDetailsRepository, OrderDetailsService orderDetailsService,
-            ClientRepository clientRepository, ClientService clientService, EventService eventService) {
+            ClientRepository clientRepository, ClientService clientService, EventService eventService,
+            StaffService staffService) {
         this.rabbitTemplate = rabbitTemplate;
         this.orderService = orderService;
         this.orderRepository = orderRepository;
@@ -77,6 +81,7 @@ public class Sender implements CommandLineRunner {
         this.clientRepository = clientRepository;
         this.clientService = clientService;
         this.eventService = eventService;
+        this.staffService = staffService;
     }
 
     @Override
@@ -183,9 +188,37 @@ public class Sender implements CommandLineRunner {
             Long orderDetailsId = orderDetail.getId();
             List<Event> events = eventService.findByOrderDetailsId(orderDetailsId);
 
+            List<Map<String, Object>> eventsWithStaff = new ArrayList<>();
+            for (Event event : events) {
+                Long staffId = event.getStaff_id();
+                System.out.println(staffId);
+                Optional<Staff> staff = staffService.getStaffById(staffId);
+                System.out.println(staff);
+
+                // if staff is null then just replace name with ""
+                if (!staff.isEmpty()) {
+                    Staff staffGet = staff.get();
+
+                    Map<String, Object> eventMap = new HashMap<>();
+                    eventMap.put("event", event);
+                    eventMap.put("staffName", staffGet.getName());
+                    eventMap.put("staffEmail", staffGet.getEmail());
+
+                    eventsWithStaff.add(eventMap);
+                } else {
+                    Map<String, Object> eventMap = new HashMap<>();
+                    eventMap.put("event", event);
+                    eventMap.put("staffName", "");
+                    eventMap.put("staffEmail", "");
+
+                    eventsWithStaff.add(eventMap);
+                }
+
+            }
+
             Map<String, Object> orderDetailsMap = new HashMap<>();
             orderDetailsMap.put("orderDetails", orderDetail);
-            orderDetailsMap.put("event", events);
+            orderDetailsMap.put("events", eventsWithStaff);
 
             orderDetailsWithEvent.add(orderDetailsMap);
         }
