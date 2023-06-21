@@ -288,6 +288,11 @@
                             console.log("Registration successful");
                             console.log(response);
                             // Redirect to another page or display a success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message
+                            });
                         },
                         error: function(xhr, status, error) {
                             // Handle error response
