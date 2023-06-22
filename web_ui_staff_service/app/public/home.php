@@ -230,53 +230,44 @@
     <section style="min-height: 100vh;" class="background-radial-gradient overflow-hidden">
         <?php include 'navbar.php'; ?>
         <div class="container">
-            <div class="collapse" id="collapseExample">
-                <div class="row" style="background-color: #ffffff57;backdrop-filter: blur(5px); color:white; margin-top:20px; padding:10px">
-                    <h1 style="text-align: center;">Add new Order</h1>
-
-
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" id="description" class="form-control" name="description" required>
-                    </div>
 
 
 
 
-                    <div class="row justify-content-center">
-                        <div class="col-12">
-                            <table class="table" id="tableOrder">
-                                <thead class="text-center" style="background: #cd9678; color: white !important;">
-                                    <tr>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <table class="table" id="tableOrder">
+                        <thead class="text-center" style="background: #cd9678; color: white !important;">
+                            <tr>
 
-                                        <th class="text-white">
-                                            #
-                                        </th>
-                                        <th class="text-white">
-                                            Client Name
-                                        </th>
-                                        <th class="text-white">
-                                            Client Email
-                                        </th>
-                                        <th class="text-white">
-                                            Description
-                                        </th>
-                                        <th class="text-white">
-                                            Actions
-                                        </th>
-
-
-
-                                    </tr>
-                                </thead>
-                                <tbody class="text-center" id="orderListBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                                <th class="text-white">
+                                    #
+                                </th>
+                                <th class="text-white">
+                                    Client Name
+                                </th>
+                                <th class="text-white">
+                                    Client Email
+                                </th>
+                                <th class="text-white">
+                                    Description
+                                </th>
+                                <th class="text-white">
+                                    Actions
+                                </th>
 
 
 
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" id="orderListBody"></tbody>
+                    </table>
                 </div>
+            </div>
+
+
+
+        </div>
     </section>
 
     <div class="modal fade" id="eventsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -290,8 +281,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                 </div>
             </div>
         </div>
@@ -401,13 +392,6 @@
                             var selectLocation = $('.location');
                             selectLocation.empty(); // Clear existing options
 
-                            var detailRow = '<p><b>Day: </b>' + (i + 1) + '</p>' + '<p><b>Date: </b>' +
-                                detail.date + '</p>' +
-                                '<p><b>Time Start: </b>' + detail.time_start + '</p>' +
-                                '<p><b>Time End: </b>' + detail.time_end + '</p>' +
-                                '<p><b>Location: </b>' + detail.location + '</p>' +
-                                '<hr>';
-                            modalBody.append(detailRow);
                             // Add a hidden default option
                             selectLocation.append(
                                 '<option value="" hidden>Select a PIC staff</option>');
