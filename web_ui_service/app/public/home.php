@@ -195,13 +195,14 @@
                         if (response.success) {
                             var orderDetails = response.data;
 
+
                             // Populate the modal with order details
                             var modalBody = $('#orderDetailsModal').find('.modal-body');
                             modalBody.empty();
 
                             // Iterate over order details and append them to the modal body
                             for (var i = 0; i < orderDetails.length; i++) {
-                                var detail = orderDetails[i];
+                                var detail = orderDetails[i].orderDetails;
 
                                 var detailRow = '<p>Day: ' + (i + 1) + '</p>' + '<p>Date: ' +
                                     detail.date + '</p>' +

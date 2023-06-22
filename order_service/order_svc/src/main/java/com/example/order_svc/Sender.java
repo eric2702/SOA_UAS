@@ -1,5 +1,7 @@
 package com.example.order_svc;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -149,6 +151,12 @@ public class Sender implements CommandLineRunner {
 
         // check if order details are empty
         for (OrderDetails orderDetails : orderDetailsList) {
+            // orderdetails get date and set date + 1 day
+            LocalDate currentDate = orderDetails.getDate().toLocalDate();
+            LocalDate updatedDate = currentDate.plusDays(1);
+            Date updatedSqlDate = Date.valueOf(updatedDate);
+            orderDetails.setDate(updatedSqlDate);
+            System.out.println(orderDetails.getDate().toString());
             if (orderDetails.getDate() == null || orderDetails.getLocation().toString().isEmpty()
                     || orderDetails.getTime_end() == null || orderDetails.getTime_start() == null) {
                 ApiResponse apiResponse = new ApiResponse(false, "Order details cannot be empty", null);
