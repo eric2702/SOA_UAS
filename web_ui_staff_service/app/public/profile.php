@@ -172,7 +172,7 @@
         color: #f8f9fa;
     }
 
-    .btn-pass:hover.,
+    .btn-pass:hover,
     .btn-cancel:hover {
         color: #f8f9fa;
     }
