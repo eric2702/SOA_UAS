@@ -16,53 +16,215 @@
         href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+    
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;400&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    
     <title>Client - Profile</title>
 </head>
 <style>
-.background-radial-gradient {
-    background-color: hsl(218, 41%, 15%);
-    background-image: radial-gradient(650px circle at 0% 0%,
-            hsl(218, 41%, 35%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%),
-        radial-gradient(1250px circle at 100% 100%,
-            hsl(218, 41%, 45%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%);
-}
+    .background {
+        background-color:#f9e7dd;        
+        font-family: 'Nunito', sans-serif;
+    }
+
+    i{
+        background-color: #e3dbdb;
+        border-radius: 413px;
+        border: solid 43px #e3dbdb;
+        color: #736a6a;
+
+    }
+
+    .bg{
+        background-image: linear-gradient(90deg, #f8f9fa 25%, #f5f5f5 25%, #f5f5f5 50%, #f8f9fa 50%, #f8f9fa 75%, #f5f5f5 75%, #f5f5f5 100%);
+        border: solid 2.5px #cd9678;
+    }
+
+    h4{
+        font-family: 'Raleway', sans-serif;
+        color: #6f4933;
+    }
+    .modal-header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1rem;
+        border-bottom: 1.8px solid #7f411e;
+        border-top-left-radius: calc(0.3rem - 1px);
+        border-top-right-radius: calc(0.3rem - 1px);
+        color: #6f4933;
+        font-weight: bold;
+    }
+
+    .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: #deb69e;
+        background-clip: padding-box;
+        border: none;
+        border-radius: 0px;
+        outline: 0;
+    }
+
+    .modal-title{
+        font-family: 'Lobster', cursive;
+    }
+
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1rem;
+        color: #6f4933;
+        background-color: #f9e7dd;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    .modal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        border-top: none;
+        border-bottom-right-radius: calc(0.3rem - 1px);
+        border-bottom-left-radius: calc(0.3rem - 1px);
+        background-color: #f9e7dd;
+    }
+
+    .form-control {
+        border: solid 1.3px #6f4933;
+        color: #6f4933;
+    }
+
+    .form-control:focus {
+        color: #6f4933;
+        background-color: #fff;
+        border: solid 1.4px #6f4933;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    :focus-visible {
+        outline: -webkit-focus-ring-color auto 0px;
+    }
+
+    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+        box-shadow: none;
+    }
+
+    .form-label{
+        color: #6f4933;
+    }
+
+    .btn-pass{
+        background-color:#6f4933;
+        color:#f8f9fa;
+        transition: ease-in-out 0.5s; 
+        border-radius:0px;
+    }
+
+    .btn-primary {
+        border-radius: 0px;
+        color:#f8f9fa;
+        background-color: #877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+        transition: ease-in-out 0.5s; 
+    }
+
+    .btn-cancel{
+        background-color:#b1a9a4;
+        color:#f8f9fa;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+        border-radius: 0px;
+        transition: ease-in-out 0.5s; 
+    }
+
+    .btn:hover{
+        transform: scale(1.05);
+        color:#f8f9fa;
+    }
+
+    .btn-pass:hover. , .btn-cancel:hover{
+        color:#f8f9fa;
+    }
+
+    .btn-check:focus+.btn, .btn:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+
+
+    .btn-primary:hover {
+        color: #f8f9fa;
+        border-color: transparent;
+        background-color:#877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
 </style>
 
 <body>
     <!-- Section: Design Block -->
     <!-- Section: Design Block -->
-    <section style="min-height: 100vh;" class="background-radial-gradient overflow-hidden">
+    <section style="min-height: 100vh;" class="background">
         <?php include 'navbar.php'; ?>
 
-        <div class="container bg-white p-5" style="margin-top:40px;">
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary ms-auto" data-bs-toggle="modal"
-                    data-bs-target="#change-passwd-modal">
-                    Change Password</button>
-            </div>
-
-            <form id="clientForm" class="">
-                <fieldset disabled>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
-                        <input type="email" class="form-control" id="client-email" aria-describedby="emailHelp">
-                    </div>
-                </fieldset>
-
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="client-name">
+        <div class="container bg p-5" style="margin-top:25px;">
+            <div class="row">
+                <div class="col-md-4 col-xs-12 m-auto text-center">
+                    <i class="fas fa-user fa-9x"></i>
+                    <h4 class="mt-3">Customer 👑</h4>
                 </div>
-                <button type="button" class="btn btn-primary" id="editButton">Save</button>
-            </form>
+
+                <div class="col-md-8 col-xs-12 ">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-pass ms-auto" data-bs-toggle="modal" data-bs-target="#change-passwd-modal">Change Password</button>
+                    </div>
+
+                    <form id="clientForm" class="">
+                        <fieldset disabled>
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
+                                <input type="email" class="form-control" id="client-email" aria-describedby="emailHelp">
+                            </div>
+                        </fieldset>
+
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="client-name">
+                        </div>
+                        <button type="button" class="btn btn-primary" id="editButton">Save</button>
+                    </form>
+
+                </div>
+
+            </div>
+            
+           
+
+           
         </div>
 
         <!-- create modal for changing password -->
@@ -101,7 +263,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="change-passwd-submit">Submit</button>
                     </div>
                 </div>
