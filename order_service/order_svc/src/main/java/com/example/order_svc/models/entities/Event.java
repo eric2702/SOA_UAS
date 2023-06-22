@@ -23,6 +23,7 @@ public class Event {
     @Column(name = "order_details_id")
     private Long orderDetailsId;
     @Column(name = "display_order")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long displayOrder;
 
     public Event() {

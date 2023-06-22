@@ -71,11 +71,16 @@ public class Sender implements CommandLineRunner {
     @PostMapping("/event/add/multiple")
     public ResponseEntity addMultipleEvents(@RequestBody List<Event> events) {
         System.out.println("Sending message...");
-
+        // get max display order
+        int i = eventService.findByOrderDetailsId(events.get(0).getOrderDetailsId()) + 1;
         // check if event fields are empty
         for (Event event : events) {
+            event.setDisplayOrder(Long.valueOf(i));
+            i++;
+
             if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
                     || event.getTime_start() == null) {
+                rabbitTemplate.convertAndSend(topicExchangeName, "event.new", convertEventToJson(event));
                 ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
                 return ResponseEntity.badRequest().body(apiResponse);
             }
@@ -109,6 +114,14 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity updateMultipleEventData(@RequestBody List<Event> events) {
         // check if event fields are empty
         for (Event event : events) {
+            // get the id
+            Long id = event.getId();
+            // get the event by id
+            Event eventById = eventService.getEventById(id).orElse(null);
+            // get the display_order
+            Long display_order = eventById.getDisplayOrder();
+            // set the display_order
+            event.setDisplayOrder(display_order);
             if (event.getDescription().toString().isEmpty() || event.getTime_end() == null
                     || event.getTime_start() == null) {
                 ApiResponse apiResponse = new ApiResponse(false, "Fill all of the fields!", null);
@@ -169,7 +182,7 @@ public class Sender implements CommandLineRunner {
         int i = 1;
         for (Event data : allData) {
             System.out.println(data.getId());
-            data.setDisplay_order(Long.valueOf(i));
+            data.setDisplayOrder(Long.valueOf(i));
             eventRepository.save(data);
             rabbitTemplate.convertAndSend(topicExchangeName, "event.changed", convertEventToJson(data));
             i++;

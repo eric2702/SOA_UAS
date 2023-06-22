@@ -500,22 +500,75 @@
                                 itemBody.append(row3);
 
                                 var row4 = $('<div class="row"></div>');
+                                var divEditButton = $('<div class="col-md-2"></div>');
                                 var editButton = $(
-                                    '<div class="col-md-2"><button style="width: 100%" class="btn btn-primary btn-sm" id="buttonEdit" type="button">Edit</button></div>'
+                                    '<button style="width: 100%" class="btn btn-primary btn-sm" id="buttonEdit-' + detail.id + '" type="button">Edit</button>'
                                 );
                                 editButton.click(function() {
                                     isEditing = !isEditing; // Toggle the edit state
-                                    var inputElements = $('.editInput');
+                                    var inputElements = $('.editInput-' + this.id.split('-')[1]);
+                                    // var inputElementsid = $('#editInputId').val();
+                                    // alert(inputElementsid);
+                                    var idIni = this.id.split('-')[1];
 
                                     if (isEditing) {
-                                        inputElements.removeAttr('disabled'); // Enable the inputs
-                                        $('#buttonEdit').text('Save'); // Update the button text
+                                        inputElements.removeAttr('disabled');
+                                        $(this).text('Save');
                                     } else {
-                                        inputElements.attr('disabled', 'disabled'); // Disable the inputs
-                                        $('#buttonEdit').text('Edit'); // Update the button text
+                                        inputElements.attr('disabled', 'disabled');
+                                        $(this).text('Edit');
+
+                                        var idEdit = [];
+                                        $('input[name="idEditVal-' + this.id.split('-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            idEdit.push(value);
+                                        });
+
+                                        var timeStartEdit = [];
+                                        $('input[name="timeStartEdit-' + this.id.split('-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            timeStartEdit.push(value);
+                                        });
+
+                                        var timeEndEdit = [];
+                                        $('input[name="timeEndEdit-' + this.id.split('-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            timeEndEdit.push(value);
+                                        });
+
+                                        var descriptionEditValues = [];
+                                        $('input[name="descriptionEdit-' + this.id.split('-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            descriptionEditValues.push(value);
+                                        });
+                                        var staffNameEditValues = [];
+                                        $('select[name="staffNameEdit-' + this.id.split('-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            staffNameEditValues.push(value);
+                                        });
+
+
+                                        var orderDetail = [];
+
+                                        for (var i = 0; i < idEdit.length; i++) {
+                                            var detail = {
+                                                "id": idEdit[i],
+                                                "time_start": timeStartEdit[i],
+                                                "time_end": timeEndEdit[i],
+                                                "description": descriptionEditValues[i],
+                                                "staff_id": staffNameEditValues[i],
+                                                "orderDetailsId": idIni
+                                            };
+                                            orderDetail.push(detail);
+                                        }
+
+                                        // alert(JSON.stringify(orderDetail));\
+                                        saveData(JSON.stringify(orderDetail));
+
                                     }
                                 });
-                                row4.append(editButton);
+                                divEditButton.append(editButton);
+                                row4.append(divEditButton);
 
 
 
@@ -554,13 +607,13 @@
                                     var event = eventDetails[j].event;
                                     var eventTableRow = $('<tr id="' + event.id + '"></tr>');
 
-                                    eventTableRow.append('<td><input type="text" value="' + event.id + '" disabled></td>');
-                                    eventTableRow.append('<td><input type="time" class="editInput" value="' + event.time_start + '" disabled></td>');
-                                    eventTableRow.append('<td><input type="time" class="editInput" value="' + event.time_end + '" disabled></td>');
-                                    eventTableRow.append('<td><input type="text" class="editInput" value="' + event.description + '" disabled></td>');
+                                    eventTableRow.append('<td><input type="text" class="editInputId" name="idEditVal-' + detail.id + '[]" value="' + event.id + '" disabled></td>');
+                                    eventTableRow.append('<td><input type="time" class="editInput-' + detail.id + '"  name="timeStartEdit-' + detail.id + '[]" value="' + event.time_start + '" disabled></td>');
+                                    eventTableRow.append('<td><input type="time" class="editInput-' + detail.id + '"  name="timeEndEdit-' + detail.id + '[]" value="' + event.time_end + '" disabled></td>');
+                                    eventTableRow.append('<td><input type="text" class="editInput-' + detail.id + '"  name="descriptionEdit-' + detail.id + '[]" value="' + event.description + '" disabled></td>');
 
                                     var staffNameDropdown = $('<td></td>');
-                                    var staffNameDropdown2 = $('<select class="editInput" disabled></select>');
+                                    var staffNameDropdown2 = $('<select class="editInput-' + detail.id + '" name="staffNameEdit-' + detail.id + '[]" disabled></select>');
 
                                     for (var z = 0; z < staffArray.length; z++) {
                                         var staffItem = staffArray[z];
@@ -644,6 +697,22 @@
             function toggleEditState() {
                 var inputs = $('tr input[type="text"]');
                 inputs.prop('disabled', isEditing);
+            }
+
+
+            function saveData(data) {
+                $.ajax({
+                    url: 'http://localhost:8086/event/data/multiple',
+                    type: 'PUT',
+                    contentType: "application/json",
+                    data: data,
+                    success: function(response) {
+                        // Handle the success response
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle the error response
+                    }
+                });
             }
 
             function updateOrder(data) {

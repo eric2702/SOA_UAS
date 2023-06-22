@@ -22,20 +22,22 @@ public class Event {
     private Long staff_id;
     @Column(name = "order_details_id")
     private Long orderDetailsId;
-    private Long display_order;
+    @Column(name = "display_order")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long displayOrder;
 
     public Event() {
     }
 
     public Event(Long id, Time time_start, Time time_end, String description, Long staff_id, Long orderDetailsId,
-            Long display_order) {
+            Long displayOrder) {
         this.id = id;
         this.time_start = time_start;
         this.time_end = time_end;
         this.description = description;
         this.staff_id = staff_id;
         this.orderDetailsId = orderDetailsId;
-        this.display_order = display_order;
+        this.displayOrder = displayOrder;
     }
 
     public Long getId() {
@@ -86,12 +88,12 @@ public class Event {
         this.orderDetailsId = orderDetailsId;
     }
 
-    public Long getDisplay_order() {
-        return display_order;
+    public Long getDisplayOrder() {
+        return displayOrder;
     }
 
-    public void setDisplay_order(Long display_order) {
-        this.display_order = display_order;
+    public void setDisplayOrder(Long displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

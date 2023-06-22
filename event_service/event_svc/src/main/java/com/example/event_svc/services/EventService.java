@@ -40,4 +40,8 @@ public class EventService {
     public List<Event> addMultipleEvents(List<Event> events) {
         return eventRepository.saveAll(events);
     }
+
+    public Integer findByOrderDetailsId(Long orderDetailsId) {
+        return eventRepository.findByOrderDetailsIdOrderByDisplayOrder(orderDetailsId);
+    }
 }

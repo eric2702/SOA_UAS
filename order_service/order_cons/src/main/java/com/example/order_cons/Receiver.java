@@ -132,7 +132,7 @@ public class Receiver {
 
             Long staff_id = jsonNode.get("staff_id").asLong();
             Long orderDetailsId = jsonNode.get("orderDetailsId").asLong();
-            Long display_order = jsonNode.get("display_order").asLong();
+            Long display_order = jsonNode.get("displayOrder").asLong();
 
             Event event = new Event(id, sqlTimeStart, sqlTimeEnd, description,
                     staff_id, orderDetailsId, display_order);
