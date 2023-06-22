@@ -10,146 +10,202 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;400&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
     <title>Staff - Login</title>
 </head>
 <style>
-.background-radial-gradient {
-    background-color: hsl(218, 41%, 15%);
-    background-image: radial-gradient(650px circle at 0% 0%,
-            hsl(218, 41%, 35%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%),
-        radial-gradient(1250px circle at 100% 100%,
-            hsl(218, 41%, 45%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%);
-}
-
-#radius-shape-1 {
-    height: 220px;
-    width: 220px;
-    top: -60px;
-    left: -130px;
-    background: radial-gradient(#44006b, #ad1fff);
-    overflow: hidden;
-}
-
-#radius-shape-2 {
-    border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
-    bottom: -60px;
-    right: -110px;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(#44006b, #ad1fff);
-    overflow: hidden;
-}
-
-.bg-glass {
-    background-color: hsla(0, 0%, 100%, 0.9) !important;
-    backdrop-filter: saturate(200%) blur(25px);
-}
-
-.title-word {
-    animation: color-animation 4s linear infinite;
-}
-
-.title-word-1 {
-    --color-1: #DF8453;
-    --color-2: #3D8DAE;
-    --color-3: #E4A9A8;
-}
-
-.title-word-2 {
-    --color-1: #DBAD4A;
-    --color-2: #ACCFCB;
-    --color-3: #17494D;
-}
-
-.title-word-3 {
-    --color-1: #ACCFCB;
-    --color-2: #E4A9A8;
-    --color-3: #ACCFCB;
-}
-
-.title-word-4 {
-    --color-1: #3D8DAE;
-    --color-2: #DF8453;
-    --color-3: #E4A9A8;
-}
-
-@keyframes color-animation {
-    0% {
-        color: var(--color-1)
+    body{
+        font-family: 'Nunito', sans-serif;
+        /* background-color:#f9e7dd; */
+        background-image: linear-gradient(90deg, #deb69e 25%, #dbaa8c 25%, #dbaa8c 50%, #deb69e 50%, #deb69e 75%, #dbaa8c 75%, #dbaa8c 100%);
+        background-size: 60.00px 60.00px;
     }
 
-    32% {
-        color: var(--color-1)
+    .btn-close:focus {
+        outline: 0;
+        box-shadow: none;
+        opacity: 0;
     }
 
-    33% {
-        color: var(--color-2)
+    h1 {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 500;
+        letter-spacing: 20px;
+        text-transform: uppercase;
+        color: #6f4933;
     }
 
-    65% {
-        color: var(--color-2)
+    h6 {
+        font-weight: bold;
+        letter-spacing: 16px;
+        color: #fef0e7;
+        font-family: 'Nunito', sans-serif;
+        font-size:20px;
     }
 
-    66% {
-        color: var(--color-3)
+    span.title {
+        position: relative;
+        display: inline-block;
+        /* animation-delay: calc(.1s * var(--i)); */
+        animation: bounce 2s infinite;
+        font-family: 'Lobster', cursive;
+        font-size: 90px;
+        transform:translateY(0);
+        transform:translateX(-10px);
+        color:#f8f9fa;
+        letter-spacing: 9px;
+
     }
 
-    99% {
-        color: var(--color-3)
+    @keyframes bounce{
+        0%, 40%, 100% {
+            transform:translateY(0);
+        }
+        20%{
+            transform:translateY(-30px);
+        }
     }
 
-    100% {
-        color: var(--color-1)
+    span.title:nth-child(1){
+      animation-delay:0.1s;
     }
-}
+    span.title:nth-child(2){
+      animation-delay:0.2s;
+    }
+    span.title:nth-child(3){
+      animation-delay:0.3s;
+    }
+    span.title:nth-child(4){
+      animation-delay:0.4s;
+    }
+    span.title:nth-child(5){
+      animation-delay:0.5s;
+    }
+    span.title:nth-child(6){
+      animation-delay:0.6s;
+    }
+    span.title:nth-child(7){
+      animation-delay:0.7s;
+    }
+    span.title:nth-child(8){
+      animation-delay:0.8s;
+    }
+
+    .card{
+        background-color: #f9e7dd;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    h3{
+        font-family: 'Lobster', cursive;
+        font-size: 40px;
+        color: #6f4933;
+    }
+
+    label,p{
+        color: #6f4933;
+    }
+
+    .form-label{
+        font-weight:bold;
+    }
+
+    .form-control {
+        border: solid 1.3px #6f4933;
+        color: #6f4933;
+    }
+
+    .form-control:focus {
+        color: #6f4933;
+        background-color: #fff;
+        border: solid 1.4px #6f4933;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    :focus-visible {
+        outline: -webkit-focus-ring-color auto 0px;
+    }
+
+    .btn-primary {
+        border-radius: 0px;
+        color:#f8f9fa;
+        background-color: #877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+        transition: ease-in-out 0.5s; 
+    }
+
+    .btn:hover{
+        transform: scale(1.05);
+    }
+
+    .btn-primary:hover {
+        color: #f8f9fa;
+        border-color: transparent;
+        background-color:#877971;
+        background-color: #877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
+
+    .btn-check:focus+.btn-primary, .btn-primary:focus {
+        color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+        box-shadow: none;
+    }
+
+    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
+       color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
 </style>
 
 <body>
     <!-- Section: Design Block -->
     <!-- Section: Design Block -->
-    <section class="background-radial-gradient overflow-hidden">
-
-
-        <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-            <div class="row gx-lg-5 align-items-center mb-5">
-                <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                    <h1 class="my-3  fw-bold title">
-                        <span class="title-word title-word-1">Welcome</span>
-                        <span class="title-word title-word-2">at</span>
-                        <span class="title-word title-word-3">Staff</span>
-                        <span class="title-word title-word-4">Page</span>
-                    </h1>
-                    <h2 class="my-3  fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                        Unleash the Power of <br />
-                        <span style="color: hsl(218, 81%, 75%)">Memorable Events</span>
-                    </h2>
-                    <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
-                        Experience unforgettable events brought to life by our expert team of organizers. From corporate
-                        conferences to social gatherings, we handle every detail to deliver seamless and stress-free
-                        experiences that exceed your expectations.
-                    </p>
+    <section class="background overflow-hidden">
+        <div class="container mt-5">
+            <div class="row gx-lg-5 align-items-center mb-4">
+                <div class="col-lg-6 mb-5 mb-lg-0 text-center" style="z-index: 10">
+                    <span class="title">B</span>
+                    <span class="title">l</span>
+                    <span class="title">i</span>
+                    <span class="title">s</span>
+                    <span class="title">s</span>
+                    <span class="title">f</span>
+                    <span class="title">u</span>
+                    <span class="title">l</span>
+                    <h1>Organizer</h1>
+                    <h6>Staff Side<h6>
                 </div>
 
                 <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                    <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
-                    <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-
-                    <div class="card bg-glass">
-
-                        <div class="card-body px-4 py-5 px-md-5">
-
-
-
-
-
+                    <div class="card">
+                        <div class="card-body px-4 py-4 px-md-5">
                             <div id="registerform" style="display: none;">
                                 <h3 class="mb-3" style="text-align: center;">Register</h3>
                                 <!-- 2 column grid layout with text inputs for the first and last names -->

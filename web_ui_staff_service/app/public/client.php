@@ -16,39 +16,203 @@
         href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+    
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    
     <title>Staff - Home</title>
 </head>
 <style>
-.background-radial-gradient {
-    background-color: hsl(218, 41%, 15%);
-    background-image: radial-gradient(650px circle at 0% 0%,
-            hsl(218, 41%, 35%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%),
-        radial-gradient(1250px circle at 100% 100%,
-            hsl(218, 41%, 45%) 15%,
-            hsl(218, 41%, 30%) 35%,
-            hsl(218, 41%, 20%) 75%,
-            hsl(218, 41%, 19%) 80%,
-            transparent 100%);
-}
+    body {
+        font-family: 'Nunito', sans-serif;
+        background-color:#f9e7dd;
+    }
+
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+        color: #333;
+        margin-bottom: 2%;
+        margin-top: 2%;
+    }
+
+    table.dataTable tbody tr {
+        background-color: #ffffffbd;
+        border-bottom: 3px solid #cd9678;
+    }
+
+    table.dataTable.no-footer {
+        border-bottom: 0px solid #cd9678;
+    }
+    
+    tbody, td, tfoot, th, thead, tr {
+        border-color: #cd9678;
+        border-style: solid;
+        border-bottom-width: 3px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #6f4933 !important;
+        border: none;
+        background-color: transparent;
+        background: transparent;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #6f4933;
+        background:#6f4933;
+        color:#f9e7dd;
+        box-shadow: none;
+    }
+
+    :focus-visible {
+        outline: -webkit-focus-ring-color auto 0px;
+    }
+
+    .btn-primary {
+        border-radius: 0px;
+        color:#f8f9fa;
+        background-color: #877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+        transition: ease-in-out 0.5s; 
+    }
+
+    .btn:hover{
+        transform: scale(1.05);
+    }
+
+    .btn-primary:hover {
+        color: #f8f9fa;
+        border-color: transparent;
+        background-color:#877971;
+        background-color: #877971;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
+
+    .btn-check:focus+.btn-primary, .btn-primary:focus {
+        color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+        box-shadow: none;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
+
+    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
+       color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+    }
+    
+    .modal-header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1rem;
+        border-bottom: 1.8px solid #7f411e;
+        border-top-left-radius: calc(0.3rem - 1px);
+        border-top-right-radius: calc(0.3rem - 1px);
+        color: #6f4933;
+        font-weight: bold;
+    }
+
+    .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: #deb69e;
+        background-clip: padding-box;
+        border: none;
+        border-radius: 0px;
+        outline: 0;
+    }
+
+    .modal-title{
+        font-family: 'Lobster', cursive;
+    }
+
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1rem;
+        color: #6f4933;
+        background-color: #f9e7dd;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    .modal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        border-top: none;
+        border-bottom-right-radius: calc(0.3rem - 1px);
+        border-bottom-left-radius: calc(0.3rem - 1px);
+        background-color: #f9e7dd;
+    }
+
+    .btn-cancel{
+        background-color:#b1a9a4;
+        color:#f8f9fa;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
+        border-radius: 0px;
+        transition: ease-in-out 0.5s; 
+    }
+
+    .btn-cancel:hover{
+        color:#f8f9fa;
+    }
+
+    .btn-check:focus+.btn, .btn:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .btn-close:focus {
+        outline: 0;
+        box-shadow: none;
+        opacity: 0;
+    }
 </style>
 
 <body>
     <!-- Section: Design Block -->
     <!-- Section: Design Block -->
-    <section style="min-height: 100vh;" class="background-radial-gradient overflow-hidden">
+    <section style="min-height: 100vh;" class="overflow-hidden">
         <?php include 'navbar.php'; ?>
         <div class="container">
-            <div align="center" style="margin-top:40px;">
-                <!-- <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
-                    Add new Order
-                </button> -->
-            </div>
-
             <div class="collapse" id="collapseExample">
                 <div class="row"
                     style="background-color: #ffffff57;backdrop-filter: blur(5px); color:white; margin-top:20px; padding:10px">
@@ -105,11 +269,10 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center" style="margin-top: 30px;">
-                <div class="col-12 p-3" style="border-radius: 10px; background-color: #ffffff;">
-                    <table class="table rounded rounded-3 overflow-hidden w-100" id="tableOrder"
-                        style="border-radius: 5px;">
-                        <thead class="text-center" style="background: #800000; color: white !important;">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <table class="table" id="tableOrder">
+                        <thead class="text-center" style="background: #cd9678; color: white !important;">
                             <tr>
 
                                 <th class="text-white">

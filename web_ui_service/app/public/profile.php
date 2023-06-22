@@ -44,6 +44,12 @@
 
     }
 
+    .btn-close:focus {
+        outline: 0;
+        box-shadow: none;
+        opacity: 0;
+    }
+
     .bg{
         background-image: linear-gradient(90deg, #f8f9fa 25%, #f5f5f5 25%, #f5f5f5 50%, #f8f9fa 50%, #f8f9fa 75%, #f5f5f5 75%, #f5f5f5 100%);
         border: solid 2.5px #cd9678;
@@ -52,6 +58,10 @@
     h4{
         font-family: 'Raleway', sans-serif;
         color: #6f4933;
+    }
+
+    label{
+        font-weight:bold;
     }
     .modal-header {
         display: flex;
@@ -159,6 +169,12 @@
         transition: ease-in-out 0.5s; 
     }
 
+    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
+        color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+    }
+
     .btn:hover{
         transform: scale(1.05);
         color:#f8f9fa;
@@ -193,12 +209,12 @@
 
         <div class="container bg p-5" style="margin-top:25px;">
             <div class="row">
-                <div class="col-md-4 col-xs-12 m-auto text-center">
+                <div class="col-md-4 col-sm-12 m-auto text-center">
                     <i class="fas fa-user fa-9x"></i>
                     <h4 class="mt-3">Customer 👑</h4>
                 </div>
 
-                <div class="col-md-8 col-xs-12 ">
+                <div class="col-md-8 col-sm-12 ">
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-pass ms-auto" data-bs-toggle="modal" data-bs-target="#change-passwd-modal">Change Password</button>
                     </div>

@@ -57,13 +57,13 @@
                 <li class="nav-item">
                     <a class="nav-link active real" aria-current="page" href="home.php">Order</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item d-none d-sm-block">
                     <a class="nav-link active decor" aria-current="page" href="#">|</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active real" aria-current="page" href="profile.php">Profile</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item d-none d-sm-block">
                     <a class="nav-link active decor" aria-current="page" href="#">|</a>
                 </li>
                 <li class="nav-item">

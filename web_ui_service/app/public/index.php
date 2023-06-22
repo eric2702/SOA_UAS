@@ -29,9 +29,12 @@
         background-image: linear-gradient(90deg, #deb69e 25%, #dbaa8c 25%, #dbaa8c 50%, #deb69e 50%, #deb69e 75%, #dbaa8c 75%, #dbaa8c 100%);
         background-size: 60.00px 60.00px;
     }
-    /* .background {
-       
-    } */
+    
+    .btn-close:focus {
+        outline: 0;
+        box-shadow: none;
+        opacity: 0;
+    }
 
     h1 {
         font-family: 'Raleway', sans-serif;
@@ -164,6 +167,20 @@
         background-color:#877971;
         border-color: transparent;
         box-shadow: none;
+    }
+
+    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+        box-shadow: none;
+    }
+
+    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
+       color: #f8f9fa;
+        background-color:#877971;
+        border-color: transparent;
+        border-right: solid 1.5px #201e1c;
+        border-bottom: solid 1.5px #201e1c;
+        border-left: solid 1px #201e1c;
+        border-top: solid 1px #201e1c;
     }
 </style>
 
