@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
-    
+
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,16 +24,16 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-    
+
     <title>Staff - Profile</title>
 </head>
 <style>
     body {
-        background-color:#f9e7dd;        
+        background-color: #f9e7dd;
         font-family: 'Nunito', sans-serif;
     }
 
-    i{
+    i {
         background-color: #e3dbdb;
         border-radius: 413px;
         border: solid 43px #e3dbdb;
@@ -47,12 +47,12 @@
         opacity: 0;
     }
 
-    .bg{
+    .bg {
         background-image: linear-gradient(90deg, #f8f9fa 25%, #f5f5f5 25%, #f5f5f5 50%, #f8f9fa 50%, #f8f9fa 75%, #f5f5f5 75%, #f5f5f5 100%);
         border: solid 2.5px #cd9678;
     }
 
-    h4{
+    h4 {
         font-family: 'Raleway', sans-serif;
         color: #6f4933;
     }
@@ -83,7 +83,7 @@
         outline: 0;
     }
 
-    .modal-title{
+    .modal-title {
         font-family: 'Lobster', cursive;
     }
 
@@ -126,53 +126,59 @@
         outline: -webkit-focus-ring-color auto 0px;
     }
 
-    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
+    .btn-check:active+.btn-primary:focus,
+    .btn-check:checked+.btn-primary:focus,
+    .btn-primary.active:focus,
+    .btn-primary:active:focus,
+    .show>.btn-primary.dropdown-toggle:focus {
         box-shadow: none;
     }
 
-    .form-label{
+    .form-label {
         color: #6f4933;
     }
 
-    .btn-pass{
-        background-color:#6f4933;
-        color:#f8f9fa;
-        transition: ease-in-out 0.5s; 
-        border-radius:0px;
+    .btn-pass {
+        background-color: #6f4933;
+        color: #f8f9fa;
+        transition: ease-in-out 0.5s;
+        border-radius: 0px;
     }
 
     .btn-primary {
         border-radius: 0px;
-        color:#f8f9fa;
+        color: #f8f9fa;
         background-color: #877971;
         border-right: solid 1.5px #201e1c;
         border-bottom: solid 1.5px #201e1c;
         border-left: solid 1px #201e1c;
         border-top: solid 1px #201e1c;
-        transition: ease-in-out 0.5s; 
+        transition: ease-in-out 0.5s;
     }
 
-    .btn-cancel{
-        background-color:#b1a9a4;
-        color:#f8f9fa;
+    .btn-cancel {
+        background-color: #b1a9a4;
+        color: #f8f9fa;
         border-right: solid 1.5px #201e1c;
         border-bottom: solid 1.5px #201e1c;
         border-left: solid 1px #201e1c;
         border-top: solid 1px #201e1c;
         border-radius: 0px;
-        transition: ease-in-out 0.5s; 
+        transition: ease-in-out 0.5s;
     }
 
-    .btn:hover{
+    .btn:hover {
         transform: scale(1.05);
-        color:#f8f9fa;
+        color: #f8f9fa;
     }
 
-    .btn-pass:hover. , .btn-cancel:hover{
-        color:#f8f9fa;
+    .btn-pass:hover.,
+    .btn-cancel:hover {
+        color: #f8f9fa;
     }
 
-    .btn-check:focus+.btn, .btn:focus {
+    .btn-check:focus+.btn,
+    .btn:focus {
         outline: 0;
         box-shadow: none;
     }
@@ -181,20 +187,24 @@
     .btn-primary:hover {
         color: #f8f9fa;
         border-color: transparent;
-        background-color:#877971;
+        background-color: #877971;
         border-right: solid 1.5px #201e1c;
         border-bottom: solid 1.5px #201e1c;
         border-left: solid 1px #201e1c;
         border-top: solid 1px #201e1c;
     }
 
-    label{
-        font-weight:bold;
+    label {
+        font-weight: bold;
     }
 
-    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
+    .btn-check:active+.btn-primary,
+    .btn-check:checked+.btn-primary,
+    .btn-primary.active,
+    .btn-primary:active,
+    .show>.btn-primary.dropdown-toggle {
         color: #f8f9fa;
-        background-color:#877971;
+        background-color: #877971;
         border-color: transparent;
     }
 </style>
@@ -214,7 +224,7 @@
                 <div class="col-md-8 col-sm-12 ">
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-pass ms-auto" data-bs-toggle="modal" data-bs-target="#change-passwd-modal">
-                    Change Password</button>
+                            Change Password</button>
                     </div>
                     <form id="clientForm" class="">
                         <fieldset disabled>
@@ -231,11 +241,22 @@
                         <button type="button" class="btn btn-primary" id="editButton">Save</button>
                     </form>
                 </div>
-            
-            
+
+
             </div>
 
-            
+            <form id="clientForm" class="">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
+                    <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="staff-name">
+                </div>
+                <button type="button" class="btn btn-primary" id="editButton">Save</button>
+            </form>
         </div>
 
         <!-- create modal for changing password -->
@@ -288,6 +309,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
         </script>
         <script>
+            //if session storage is empty, redirect to login page
+            if (sessionStorage.getItem("id") == null) {
+                window.location.href = "http://localhost:81/index.php";
+            }
             $(document).ready(function() {
                 // Fetch data from localhost:8080/client/{id}
                 //get the id from the session
@@ -312,6 +337,7 @@
 
                     var formData = {
                         name: $('#staff-name').val(),
+                        email: $('#staff-email').val(),
                         id: id_staff,
                     };
                     $.ajax({
@@ -331,6 +357,12 @@
                         },
                         error: function(xhr, status, error) {
                             console.log(error);
+                            var err = JSON.parse(xhr.responseText);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: err.message
+                            });
                         }
                     })
                 });

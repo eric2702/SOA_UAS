@@ -68,6 +68,12 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity addClient(@RequestBody Client client) {
         System.out.println("Sending message...");
 
+        // check if any of the fields are empty
+        if (client.getName().isEmpty() || client.getEmail().isEmpty() || client.getPassword().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Client clientExists = clientRepository.findClientByEmail(client.getEmail());
         if (clientExists != null) {
             ApiResponse response = new ApiResponse(false, "Client already exists");
@@ -86,6 +92,12 @@ public class Sender implements CommandLineRunner {
     @PutMapping("/client/data")
     public ResponseEntity updateClientData(@RequestBody Map<String, Object> requestBody) {
 
+        // if name or email is empty
+        if (requestBody.get("name").toString().isEmpty() || requestBody.get("email").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
 
         if (clientToUpdate.isEmpty()) {
@@ -96,11 +108,12 @@ public class Sender implements CommandLineRunner {
         // convert optional to client
         Client client = clientToUpdate.get();
         client.setName(requestBody.get("name").toString());
+        client.setEmail(requestBody.get("email").toString());
 
         // existingClient.setEmail(client.getEmail());
         // existingClient.setName(client.getName());
         // existingClient.setPassword(client.getPassword());
-        Client updatedClient = clientService.updateClientData(client);
+        Client updatedClient = clientRepository.save(client);
         String clientJson = convertClientToJson(updatedClient);
         rabbitTemplate.convertAndSend(topicExchangeName, "client.changed", clientJson);
 
@@ -112,6 +125,13 @@ public class Sender implements CommandLineRunner {
 
     @PutMapping("/client/password")
     public ResponseEntity updateClientPassword(@RequestBody Map<String, Object> requestBody) {
+
+        // if old password or new password is empty
+        if (requestBody.get("oldPassword").toString().isEmpty()
+                || requestBody.get("newPassword").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         Optional<Client> clientToUpdate = clientService.getClientById(Long.parseLong(requestBody.get("id").toString()));
 

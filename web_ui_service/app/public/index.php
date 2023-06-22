@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,18 +22,16 @@
     <title>Client - Login</title>
 </head>
 <style>
-    body{
+    body {
         font-family: 'Nunito', sans-serif;
         /* background-color:#f9e7dd; */
         background-image: linear-gradient(90deg, #deb69e 25%, #dbaa8c 25%, #dbaa8c 50%, #deb69e 50%, #deb69e 75%, #dbaa8c 75%, #dbaa8c 100%);
         background-size: 60.00px 60.00px;
     }
-    
-    .btn-close:focus {
-        outline: 0;
-        box-shadow: none;
-        opacity: 0;
-    }
+
+    /* .background {
+       
+    } */
 
     h1 {
         font-family: 'Raleway', sans-serif;
@@ -49,7 +46,7 @@
         letter-spacing: 16px;
         color: #fef0e7;
         font-family: 'Nunito', sans-serif;
-        font-size:20px;
+        font-size: 20px;
     }
 
     span.title {
@@ -59,64 +56,76 @@
         animation: bounce 2s infinite;
         font-family: 'Lobster', cursive;
         font-size: 90px;
-        transform:translateY(0);
-        transform:translateX(-10px);
-        color:#f8f9fa;
+        transform: translateY(0);
+        transform: translateX(-10px);
+        color: #f8f9fa;
         letter-spacing: 9px;
 
     }
 
-    @keyframes bounce{
-        0%, 40%, 100% {
-            transform:translateY(0);
+    @keyframes bounce {
+
+        0%,
+        40%,
+        100% {
+            transform: translateY(0);
         }
-        20%{
-            transform:translateY(-30px);
+
+        20% {
+            transform: translateY(-30px);
         }
     }
 
-    span.title:nth-child(1){
-      animation-delay:0.1s;
-    }
-    span.title:nth-child(2){
-      animation-delay:0.2s;
-    }
-    span.title:nth-child(3){
-      animation-delay:0.3s;
-    }
-    span.title:nth-child(4){
-      animation-delay:0.4s;
-    }
-    span.title:nth-child(5){
-      animation-delay:0.5s;
-    }
-    span.title:nth-child(6){
-      animation-delay:0.6s;
-    }
-    span.title:nth-child(7){
-      animation-delay:0.7s;
-    }
-    span.title:nth-child(8){
-      animation-delay:0.8s;
+    span.title:nth-child(1) {
+        animation-delay: 0.1s;
     }
 
-    .card{
+    span.title:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    span.title:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    span.title:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    span.title:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    span.title:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
+    span.title:nth-child(7) {
+        animation-delay: 0.7s;
+    }
+
+    span.title:nth-child(8) {
+        animation-delay: 0.8s;
+    }
+
+    .card {
         background-color: #f9e7dd;
         font-family: 'Raleway', sans-serif;
     }
 
-    h3{
+    h3 {
         font-family: 'Lobster', cursive;
         font-size: 40px;
         color: #6f4933;
     }
 
-    label,p{
+    label,
+    p {
         color: #6f4933;
     }
 
-    .form-label{
-        font-weight:bold;
+    .form-label {
+        font-weight: bold;
     }
 
     .form-control {
@@ -138,23 +147,23 @@
 
     .btn-primary {
         border-radius: 0px;
-        color:#f8f9fa;
+        color: #f8f9fa;
         background-color: #877971;
         border-right: solid 1.5px #201e1c;
         border-bottom: solid 1.5px #201e1c;
         border-left: solid 1px #201e1c;
         border-top: solid 1px #201e1c;
-        transition: ease-in-out 0.5s; 
+        transition: ease-in-out 0.5s;
     }
 
-    .btn:hover{
+    .btn:hover {
         transform: scale(1.05);
     }
 
     .btn-primary:hover {
         color: #f8f9fa;
         border-color: transparent;
-        background-color:#877971;
+        background-color: #877971;
         background-color: #877971;
         border-right: solid 1.5px #201e1c;
         border-bottom: solid 1.5px #201e1c;
@@ -162,25 +171,12 @@
         border-top: solid 1px #201e1c;
     }
 
-    .btn-check:focus+.btn-primary, .btn-primary:focus {
+    .btn-check:focus+.btn-primary,
+    .btn-primary:focus {
         color: #f8f9fa;
-        background-color:#877971;
+        background-color: #877971;
         border-color: transparent;
         box-shadow: none;
-    }
-
-    .btn-check:active+.btn-primary:focus, .btn-check:checked+.btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show>.btn-primary.dropdown-toggle:focus {
-        box-shadow: none;
-    }
-
-    .btn-check:active+.btn-primary, .btn-check:checked+.btn-primary, .btn-primary.active, .btn-primary:active, .show>.btn-primary.dropdown-toggle {
-       color: #f8f9fa;
-        background-color:#877971;
-        border-color: transparent;
-        border-right: solid 1.5px #201e1c;
-        border-bottom: solid 1.5px #201e1c;
-        border-left: solid 1px #201e1c;
-        border-top: solid 1px #201e1c;
     }
 </style>
 
@@ -227,6 +223,10 @@
                                     <label class="form-label" for="form3Example4">Password</label>
                                     <input type="password" id="form3Example4" class="form-control" />
                                 </div>
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example7">Confirm Password</label>
+                                    <input type="password" id="confirm_password" class="form-control" />
+                                </div>
 
                                 <div align="center">
                                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submitregister">
@@ -238,9 +238,8 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Already have an account? <span
-                                            style="text-decoration: underline; cursor:pointer;" id="signin-link"><b>Sign in
-                                            here</b></span></p>
+                                    <p>Already have an account? <span style="text-decoration: underline; cursor:pointer;" id="signin-link"><b>Sign in
+                                                here</b></span></p>
                                     <br>
                                 </div>
                             </div>
@@ -262,6 +261,8 @@
                                     <input type="password" id="form3Example7" class="form-control" />
                                 </div>
 
+
+
                                 <div align="center">
                                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submitsignin">
                                         Sign In
@@ -272,8 +273,7 @@
 
                                 <!-- Register buttons -->
                                 <div class="text-center">
-                                    <p>Don't have an account? <span style="text-decoration: underline; cursor:pointer;"
-                                            id="register-link"><b>Register here</b></span></p>
+                                    <p>Don't have an account? <span style="text-decoration: underline; cursor:pointer;" id="register-link"><b>Register here</b></span></p>
                                     <br>
                                 </div>
                                 <br>
@@ -290,128 +290,146 @@
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <script>
-    $(document).ready(function() {
-        // Register link click event handler
-        $("#register-link").click(function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            $("#registerform").show(); // Display the register form
-            $("#loginform").hide();
+        if (sessionStorage.getItem("id") != null) {
+            window.location.href = "http://localhost/home.php";
+        }
+        $(document).ready(function() {
+            // Register link click event handler
+            $("#register-link").click(function(e) {
+                e.preventDefault(); // Prevent default link behavior
+                $("#registerform").show(); // Display the register form
+                $("#loginform").hide();
 
-        });
-        $("#signin-link").click(function(e) {
-            e.preventDefault(); // Prevent default link behavior
+            });
+            $("#signin-link").click(function(e) {
+                e.preventDefault(); // Prevent default link behavior
 
-            $("#registerform").hide(); // Display the register form
-            $("#loginform").show();
-        });
+                $("#registerform").hide(); // Display the register form
+                $("#loginform").show();
+            });
 
-        $("#submitregister").click(function(e) {
-            e.preventDefault(); // Prevent default form submission
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You want to register with these data?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var name = $("#form3Example2").val();
-                    var email = $("#form3Example3").val();
-                    var password = $("#form3Example4").val();
+            $("#submitregister").click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to register with these data?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var name = $("#form3Example2").val();
+                        var email = $("#form3Example3").val();
+                        var password = $("#form3Example4").val();
+                        var confirm_password = $("#confirm_password").val();
 
-                    // Create an object with the form data
-                    var formData = {
-                        name: name,
-                        email: email,
-                        password: password
-                    };
+                        // Create an object with the form data
+                        var formData = {
+                            name: name,
+                            email: email,
+                            password: password,
+                        };
 
-                    // Make a POST request to http://localhost:8080/client/register with the form data
-                    $.ajax({
-                        url: "http://localhost:8080/client/register",
-                        method: "POST",
-                        data: JSON.stringify(
-                            formData), // Serialize the form data as JSON
-                        contentType: "application/json", // Set the content type as JSON
-                        success: function(response) {
-                            // Handle success response
-                            console.log("Registration successful");
-                            console.log(response);
-                            // Redirect to another page or display a success message
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.log("Registration failed");
-                            console.log(error);
-                            // Display an error message
-                            //get the error message
-                            var err = JSON.parse(xhr.responseText);
+                        //if password and confirm password are not same
+                        if (password != confirm_password) {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Error',
-                                text: err.message
+                                title: 'Oops...',
+                                text: 'Password and Confirm Password are not same!',
                             });
+                            return;
                         }
-                    });
-                }
-            });
-        });
 
-        $("#submitsignin").click(function(e) {
-            e.preventDefault(); // Prevent default form submission
-
-
-
-            var email = $("#form3Example6").val();
-            var password = $("#form3Example7").val();
-
-            // Create an object with the form data
-            var formData = {
-                email: email,
-                password: password
-            };
-
-
-            $.ajax({
-                url: "http://localhost:8088/client/login",
-                method: "POST",
-                data: JSON.stringify(formData), // Serialize the form data as JSON
-                contentType: "application/json", // Set the content type as JSON
-                success: function(response) {
-                    // Handle success response
-                    console.log("Login successful");
-                    console.log(response);
-                    sessionStorage.setItem('id', response.data.id);
-
-                    window.location.href = "home.php";
-                    // Redirect to another page or display a success message
-                },
-                error: function(xhr, status, error) {
-                    // Handle error response
-                    console.log("Login failed");
-                    console.log(error);
-                    // Display an error message
-                    //get the error message
-                    var err = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: err.message
-                    });
-                }
+                        // Make a POST request to http://localhost:8080/client/register with the form data
+                        $.ajax({
+                            url: "http://localhost:8080/client/register",
+                            method: "POST",
+                            data: JSON.stringify(
+                                formData), // Serialize the form data as JSON
+                            contentType: "application/json", // Set the content type as JSON
+                            success: function(response) {
+                                // Handle success response
+                                console.log("Registration successful");
+                                console.log(response);
+                                // Redirect to another page or display a success message
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                // Handle error response
+                                console.log("Registration failed");
+                                console.log(error);
+                                // Display an error message
+                                //get the error message
+                                var err = JSON.parse(xhr.responseText);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: err.message
+                                });
+                            }
+                        });
+                    }
+                });
             });
 
+            $("#submitsignin").click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+
+
+                var email = $("#form3Example6").val();
+                var password = $("#form3Example7").val();
+
+                // Create an object with the form data
+                var formData = {
+                    email: email,
+                    password: password
+                };
+
+
+                $.ajax({
+                    url: "http://localhost:8088/client/login",
+                    method: "POST",
+                    data: JSON.stringify(formData), // Serialize the form data as JSON
+                    contentType: "application/json", // Set the content type as JSON
+                    success: function(response) {
+                        // Handle success response
+                        console.log("Login successful");
+                        console.log(response);
+                        sessionStorage.setItem('id', response.data.id);
+
+                        window.location.href = "home.php";
+                        // Redirect to another page or display a success message
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.log("Login failed");
+                        console.log(error);
+                        // Display an error message
+                        //get the error message
+                        var err = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: err.message
+                        });
+                    }
+                });
+
+
+            });
+
 
         });
-
-
-    });
     </script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--

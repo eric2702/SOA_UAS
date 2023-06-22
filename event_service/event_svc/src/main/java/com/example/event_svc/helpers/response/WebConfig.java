@@ -1,4 +1,4 @@
-package com.example.event_svc;
+package com.example.event_svc.helpers.response;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

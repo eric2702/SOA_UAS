@@ -226,6 +226,11 @@
                                     <input type="password" id="form3Example4" class="form-control" />
                                 </div>
 
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example4">Confirm Password</label>
+                                    <input type="password" id="confirm_password" class="form-control" />
+                                </div>
+
                                 <div align="center">
                                     <button type="submit" class="btn btn-primary btn-block mb-4" id="submitregister">
                                         Register
@@ -294,6 +299,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
+    if (sessionStorage.getItem("id") != null) {
+        window.location.href = "http://localhost:81/home.php";
+    }
     $(document).ready(function() {
         // Register link click event handler
         $("#register-link").click(function(e) {
@@ -324,13 +332,24 @@
                     var name = $("#form3Example2").val();
                     var email = $("#form3Example3").val();
                     var password = $("#form3Example4").val();
+                    var confirm_password = $("#confirm_password").val();
 
                     // Create an object with the form data
                     var formData = {
                         name: name,
                         email: email,
-                        password: password
+                        password: password,
                     };
+
+                    //if password and confirm password are not the same
+                    if (password != confirm_password) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Password and Confirm Password are not the same!',
+                        });
+                        return;
+                    }
 
                     // Make a POST request to http://localhost:8080/client/register with the form data
                     $.ajax({
@@ -344,6 +363,11 @@
                             console.log("Registration successful");
                             console.log(response);
                             // Redirect to another page or display a success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message
+                            });
                         },
                         error: function(xhr, status, error) {
                             // Handle error response

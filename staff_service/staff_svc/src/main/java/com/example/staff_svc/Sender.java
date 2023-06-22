@@ -69,6 +69,12 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity addStaff(@RequestBody Staff staff) {
         System.out.println("Sending message...");
 
+        // check if any of the fields are empty
+        if (staff.getEmail().isEmpty() || staff.getPassword().isEmpty() || staff.getName().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Staff staffExists = staffRepository.findStaffByEmail(staff.getEmail());
         if (staffExists != null) {
             ApiResponse response = new ApiResponse(false, "Staff already exists");
@@ -87,6 +93,12 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity updateStaffData(@RequestBody Map<String, Object> requestBody) {
         Optional<Staff> staffToUpdate = staffService.getStaffById(Long.parseLong(requestBody.get("id").toString()));
 
+        // if request name or email is empty
+        if (requestBody.get("name").toString().isEmpty() || requestBody.get("email").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         if (staffToUpdate.isEmpty()) {
             ApiResponse response = new ApiResponse(false, "Staff does not exist");
             return ResponseEntity.badRequest().body(response);
@@ -95,8 +107,9 @@ public class Sender implements CommandLineRunner {
         // convert optional to client
         Staff staff = staffToUpdate.get();
         staff.setName(requestBody.get("name").toString());
+        staff.setEmail(requestBody.get("email").toString());
 
-        Staff updatedStaff = staffService.updateStaffData(staff);
+        Staff updatedStaff = staffRepository.save(staff);
         String staffJson = convertStaffToJson(updatedStaff);
         rabbitTemplate.convertAndSend(topicExchangeName, "staff.changed", staffJson);
 
@@ -108,6 +121,13 @@ public class Sender implements CommandLineRunner {
 
     @PutMapping("/staff/password")
     public ResponseEntity updateClientPassword(@RequestBody Map<String, Object> requestBody) {
+
+        // if request old password or new password is empty
+        if (requestBody.get("oldPassword").toString().isEmpty()
+                || requestBody.get("newPassword").toString().isEmpty()) {
+            ApiResponse response = new ApiResponse(false, "Please fill in all fields");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         Optional<Staff> staffToUpdate = staffService.getStaffById(Long.parseLong(requestBody.get("id").toString()));
 
