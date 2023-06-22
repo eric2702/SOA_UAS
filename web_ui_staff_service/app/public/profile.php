@@ -245,7 +245,7 @@
 
             </div>
 
-            <form id="clientForm" class="">
+            <!-- <form id="clientForm" class="">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
                     <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
@@ -256,7 +256,7 @@
                     <input type="text" class="form-control" id="staff-name">
                 </div>
                 <button type="button" class="btn btn-primary" id="editButton">Save</button>
-            </form>
+            </form> -->
         </div>
 
         <!-- create modal for changing password -->
