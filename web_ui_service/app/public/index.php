@@ -357,11 +357,17 @@
                                 console.log("Registration successful");
                                 console.log(response);
                                 // Redirect to another page or display a success message
+                                $("#form3Example2").val("");
+                                $("#form3Example3").val("");
+                                $("#form3Example4").val("");
+                                $("#confirm_password").val("");
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success',
                                     text: response.message
                                 });
+
+
                             },
                             error: function(xhr, status, error) {
                                 // Handle error response
