@@ -301,7 +301,8 @@
 
 
 
-
+                    <!-- hidden input -->
+                    <input type="hidden" value="" id="hidden-table-id">
 
                     <div id="detailsContainer">
                         <div class="row">
@@ -342,7 +343,8 @@
                         </div>
                     </div>
                     <div align="center">
-                        <button type="submit" class="btn btn-primary" id="submitorder">Add new rundown</button>
+                        <button type="submit" class="btn btn-primary submitorder" id="submitorder">Add new
+                            rundown</button>
                     </div>
                 </div>
 
@@ -606,15 +608,17 @@
                 }
             });
 
-            //when click Order Details button in table get the order details from api 
-            $(document).on('click', '.create-events', function() {
-                var orderID = $(this).data("order-id");
+            var orderID = 0;
+
+            function eventAdd() {
+                // var orderID = $(this).data("order-id");
+                var orderIDfix = orderID;
                 idorderdetailsArr = [];
 
 
                 // AJAX request to retrieve order details
                 $.ajax({
-                    url: 'http://localhost:8084/order/details/' + orderID,
+                    url: 'http://localhost:8084/order/details/' + orderIDfix,
                     method: 'GET',
                     success: function(response) {
                         if (response.success) {
@@ -677,7 +681,8 @@
                                 addButton2 = $(
                                     '<button style="width: 100%" id="' +
                                     detail.id +
-                                    '" class="btn btn-primary btn-sm" type="button">Add Event</button>'
+                                    '" class="btn btn-primary btn-sm" type="button" addevidx="' +
+                                    i + '">Add Event</button>'
                                 );
                                 addbutton.append(addButton2);
                                 addButton2.click((function(index) {
@@ -692,9 +697,15 @@
                                         idorderdetails = idorderdetailsArr[
                                             index];
 
+                                        //
+                                        // assign index to a hidden input
+
+
+                                        $('#hidden-table-id').val(index)
                                         // Handle edit button click event here
                                         // You can access the corresponding order detail using the index
                                         $('#addEventModal').modal('show');
+
 
 
                                     };
@@ -817,7 +828,448 @@
                                 eventTableHeader.append(headerRow);
 
                                 // Create the table body
-                                var eventTableBody = $('<tbody class="row_position"></tbody>');
+                                var eventTableBody = $(
+                                    '<tbody class="row_position isibodyynya"></tbody>');
+                                var eventDetails = orderDetails[i].events;
+
+                                // Iterate over the event details and create rows for each event
+                                for (var j = 0; j < eventDetails.length; j++) {
+                                    var event = eventDetails[j].event;
+                                    var eventTableRow = $('<tr id="' + event.id + '"></tr>');
+
+                                    eventTableRow.append(
+                                        '<td><input type="text" class="editInputId" name="idEditVal-' +
+                                        detail.id + '[]" value="' + event.id +
+                                        '" disabled></td>');
+                                    eventTableRow.append(
+                                        '<td><input type="time" class="editInput-' + detail
+                                        .id + '"  name="timeStartEdit-' + detail.id +
+                                        '[]" value="' + event.time_start +
+                                        '" disabled></td>');
+                                    eventTableRow.append(
+                                        '<td><input type="time" class="editInput-' + detail
+                                        .id + '"  name="timeEndEdit-' + detail.id +
+                                        '[]" value="' + event.time_end + '" disabled></td>');
+                                    eventTableRow.append(
+                                        '<td><input type="text" class="editInput-' + detail
+                                        .id + '"  name="descriptionEdit-' + detail.id +
+                                        '[]" value="' + event.description +
+                                        '" disabled></td>');
+
+                                    var staffNameDropdown = $('<td></td>');
+                                    var staffNameDropdown2 = $('<select class="editInput-' +
+                                        detail.id + '" name="staffNameEdit-' + detail.id +
+                                        '[]" disabled></select>');
+
+                                    for (var z = 0; z < staffArray.length; z++) {
+                                        var staffItem = staffArray[z];
+                                        var option = $('<option value="' + staffItem.id + '">' +
+                                            staffItem.name + '</option>');
+
+                                        if (staffItem.name === eventDetails[j].staffName) {
+
+                                            option.prop('selected', true);
+                                        }
+
+                                        staffNameDropdown2.append(option);
+                                    }
+
+                                    staffNameDropdown.append(staffNameDropdown2);
+                                    eventTableRow.append(staffNameDropdown);
+                                    var deleteTd = $('<td></td>');
+                                    var deleteButton = $(
+                                        '<button type="button" class="btn btn-danger delete-event" delete-id=' +
+                                        event.id +
+                                        '><i class="fa fa-trash" aria-hidden="true"></i></button>'
+                                    );
+                                    deleteTd.append(deleteButton);
+                                    eventTableRow.append(deleteTd);
+
+                                    deleteButton.click(function() {
+                                        var eventId = $(this).attr('delete-id');
+                                        var thisTableId = $(
+                                                this
+                                            )
+                                            .closest(
+                                                'table'
+                                            )
+                                            .attr(
+                                                'id'
+                                            )
+                                            .replace(
+                                                'table',
+                                                ''
+                                            );
+
+
+
+                                        //ajaax call to delete
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: "You won't be able to revert this!",
+                                            icon: 'warning',
+
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+
+                                            confirmButtonText: 'Yes, delete it!'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $.ajax({
+                                                    url: 'http://localhost:8086/event/delete/' +
+                                                        eventId,
+                                                    type: 'DELETE',
+                                                    contentType: "application/json",
+                                                    success: function(
+                                                        response
+                                                    ) {
+                                                        // remove the data from the datatable
+                                                        //get this button's table
+
+
+                                                        var table =
+                                                            $(
+                                                                '#table' +
+                                                                thisTableId
+                                                            )
+                                                            .DataTable();
+                                                        var row = $(
+                                                            '#' +
+                                                            eventId
+                                                        );
+                                                        table.row(
+                                                                row)
+                                                            .remove()
+                                                            .draw();
+
+
+                                                        console.log
+                                                        // Handle the success response
+                                                        var message =
+                                                            response
+                                                            .message;
+                                                        Swal.fire({
+                                                            title: 'Success!',
+                                                            text: message,
+                                                            icon: 'success',
+                                                            confirmButtonText: 'OK'
+                                                        })
+
+                                                    },
+                                                    error: function(
+                                                        xhr,
+                                                        textStatus,
+                                                        errorThrown
+                                                    ) {
+                                                        // Handle the error response
+                                                        var err =
+                                                            JSON
+                                                            .parse(
+                                                                xhr
+                                                                .responseText
+                                                            );
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Error',
+                                                            text: err
+                                                                .message
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        })
+                                    });
+
+
+
+
+                                    eventTableBody.append(eventTableRow);
+                                }
+
+
+
+                                // Append the table header and body to the table
+                                eventTable.append(eventTableHeader);
+                                eventTable.append(eventTableBody);
+
+                                // Append the table to the column
+                                eventColumn.append(eventTable);
+
+                                // Append the column to the row
+                                eventRow.append(eventColumn);
+
+                                // Append the event row to the item body
+                                itemBody.append(eventRow);
+
+                                // Append the item body to the item content
+                                itemContent.append(itemBody);
+
+                                // Append the header and content to the accordion item
+                                accordionItem.append(itemHeader);
+                                accordionItem.append(itemContent);
+
+                                // Append the accordion item to the accordion container
+                                accordionContainer.append(accordionItem);
+                            }
+
+                            // Append the accordion container to the modal body
+                            modalBody.append(accordionContainer);
+
+                            // Show the modal
+                            $(".dataTable").DataTable(
+
+                            );
+                            $('.row_position').sortable({
+                                stop: function() {
+                                    var selectedData = new Array();
+                                    $('.row_position>tr').each(function() {
+                                        selectedData.push($(this).attr(
+                                            "id"));
+                                    });
+                                    // alert(selectedData);
+                                    updateOrder(selectedData);
+                                }
+                            });
+                            $('#eventsModal').modal('show');
+
+
+
+                        } else {
+                            alert('Failed to retrieve order details.');
+
+
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred while retrieving order details.');
+                    }
+                });
+
+            }
+
+
+
+            //when click Order Details button in table get the order details from api 
+            $(document).on('click', '.create-events', function() {
+                orderID = $(this).data("order-id");
+                idorderdetailsArr = [];
+
+
+                // AJAX request to retrieve order details
+                $.ajax({
+                    url: 'http://localhost:8084/order/details/' + orderID,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            var orderDetails = response.data;
+
+                            // Populate the modal with order details
+                            var modalBody = $('#eventsModal').find('.modal-body');
+                            modalBody.empty();
+
+                            // Create an accordion container
+                            var accordionContainer = $(
+                                '<div class="accordion" id="orderAccordion"></div>');
+
+                            // Iterate over order details and append them as accordion items
+                            for (var i = 0; i < orderDetails.length; i++) {
+                                var detail = orderDetails[i].orderDetails;
+
+                                // Create an accordion item
+                                var accordionItem = $('<div class="accordion-item"></div>');
+
+                                // Create the item header
+                                var itemHeader = $('<h2 class="accordion-header" id="heading' +
+                                    i + '"></h2>');
+                                itemHeader.append(
+                                    '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' +
+                                    i + '" aria-expanded="false" aria-controls="collapse' +
+                                    i + '">Day: ' + (i + 1) + '</button>');
+
+                                // Create the item content
+                                var itemContent = $('<div id="collapse' + i +
+                                    '" class="accordion-collapse collapse" aria-labelledby="heading' +
+                                    i + '"></div>');
+
+                                var itemBody = $('<div class="accordion-body"></div>');
+
+                                // Create a row for the left column (date and location)
+                                var row1 = $('<div class="row justify-content-center"></div>');
+                                var leftColumn = $('<div class="col-md-2"></div>');
+                                leftColumn.append('<p>Date: ' + detail.date + '</p>');
+                                leftColumn.append('<p>Location: ' + detail.location + '</p>');
+                                row1.append(leftColumn);
+
+                                // Create a row for the right column (time)
+
+                                var rightColumn = $('<div class="col-md-2"></div>');
+                                rightColumn.append('<p>Time Start: ' + detail.time_start +
+                                    '</p>');
+                                rightColumn.append('<p>Time End: ' + detail.time_end + '</p>');
+                                row1.append(rightColumn);
+
+                                // Append the rows to the item body
+                                itemBody.append(row1);
+
+
+                                // Create a row for the edit button
+                                var row3 = $('<div class="row justify-content-center"></div>');
+                                var addbutton = $(
+                                    '<div class="col-md-4"></div>'
+                                );
+                                addButton2 = $(
+                                    '<button style="width: 100%" id="' +
+                                    detail.id +
+                                    '" class="btn btn-primary btn-sm" type="button" addevidx="' +
+                                    i + '">Add Event</button>'
+                                );
+                                addbutton.append(addButton2);
+                                addButton2.click((function(index) {
+
+                                    idorderdetailsArr.push(detail.id);
+
+
+                                    return function() {
+                                        // alert(idorderdetailsArr);
+                                        // alert(index);
+                                        // alert(idorderdetailsArr[index]);
+                                        idorderdetails = idorderdetailsArr[
+                                            index];
+
+                                        //
+                                        // assign index to a hidden input
+
+
+                                        $('#hidden-table-id').val(index)
+                                        // Handle edit button click event here
+                                        // You can access the corresponding order detail using the index
+                                        $('#addEventModal').modal('show');
+
+
+
+                                    };
+                                })(i));
+                                row3.append(addbutton);
+
+
+                                // Append the edit button row to the item body
+                                itemBody.append(row3);
+
+                                var row4 = $('<div class="row"></div>');
+                                var divEditButton = $('<div class="col-md-2"></div>');
+                                var editButton = $(
+                                    '<button style="width: 100%" class="btn btn-primary btn-sm" id="buttonEdit-' +
+                                    detail.id + '" type="button">Edit</button>'
+                                );
+                                editButton.click(function() {
+                                    isEditing = !isEditing; // Toggle the edit state
+                                    var inputElements = $('.editInput-' + this.id.split(
+                                        '-')[1]);
+                                    // var inputElementsid = $('#editInputId').val();
+                                    // alert(inputElementsid);
+                                    var idIni = this.id.split('-')[1];
+
+                                    if (isEditing) {
+                                        inputElements.removeAttr('disabled');
+                                        $(this).text('Save');
+                                    } else {
+                                        inputElements.attr('disabled', 'disabled');
+                                        $(this).text('Edit');
+
+                                        var idEdit = [];
+                                        $('input[name="idEditVal-' + this.id.split('-')[
+                                            1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            idEdit.push(value);
+                                        });
+
+                                        var timeStartEdit = [];
+                                        $('input[name="timeStartEdit-' + this.id.split(
+                                            '-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            timeStartEdit.push(value);
+                                        });
+
+                                        var timeEndEdit = [];
+                                        $('input[name="timeEndEdit-' + this.id.split(
+                                            '-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            timeEndEdit.push(value);
+                                        });
+
+                                        var descriptionEditValues = [];
+                                        $('input[name="descriptionEdit-' + this.id
+                                            .split('-')[1] + '[]"]').each(
+                                            function() {
+                                                var value = $(this).val();
+                                                descriptionEditValues.push(value);
+                                            });
+                                        var staffNameEditValues = [];
+                                        $('select[name="staffNameEdit-' + this.id.split(
+                                            '-')[1] + '[]"]').each(function() {
+                                            var value = $(this).val();
+                                            staffNameEditValues.push(value);
+                                        });
+
+
+                                        var orderDetail = [];
+
+                                        for (var i = 0; i < idEdit.length; i++) {
+                                            var detail = {
+                                                "id": idEdit[i],
+                                                "time_start": formatTime(
+                                                    timeStartEdit[i]),
+                                                "time_end": formatTime(timeEndEdit[
+                                                    i]),
+                                                "description": descriptionEditValues[
+                                                    i],
+                                                "staff_id": staffNameEditValues[i],
+                                                "orderDetailsId": idIni
+                                            };
+                                            orderDetail.push(detail);
+                                        }
+
+                                        // alert(JSON.stringify(orderDetail));\
+                                        saveData(JSON.stringify(orderDetail));
+
+                                    }
+                                });
+                                divEditButton.append(editButton);
+                                row4.append(divEditButton);
+
+
+
+                                // Append the edit button row to the item body
+                                itemBody.append(row4);
+
+
+                                var eventRow = $('<div class="row"></div>');
+
+                                // Create a column for the event details
+                                var eventColumn = $('<div class="col-md-12"></div>');
+
+                                // Create a table for the event details
+                                var eventTable = $(
+                                    '<table class="table table-bordered table-striped dataTable" id="table' +
+                                    i + '"></table>');
+
+                                // Create the table header
+                                var eventTableHeader = $('<thead></thead>');
+                                var headerRow = $('<tr></tr>');
+                                headerRow.append('<th>ID</th>');
+                                headerRow.append('<th>Start Time</th>');
+                                headerRow.append('<th>End Time</th>');
+                                headerRow.append('<th>Description</th>');
+                                headerRow.append('<th>PIC Staff Name</th>');
+                                headerRow.append('<th>Actions</th>')
+                                // headerRow.append('<th>PIC Staff Email</th>')
+
+                                eventTableHeader.append(headerRow);
+
+                                // Create the table body
+                                var eventTableBody = $(
+                                    '<tbody class="row_position isibodyynya"></tbody>');
                                 var eventDetails = orderDetails[i].events;
 
                                 // Iterate over the event details and create rows for each event
@@ -1058,7 +1510,7 @@
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                location.reload();
+                                // location.reload();
                             }
                         })
                     },
@@ -1108,6 +1560,13 @@
                     // alert(timeStartValue);
                     var timeEndValue = detailElement.querySelector('.timeEnd').value;
                     // alert(detailElement.querySelector('.location').value);
+
+                    if (timeStartValue == "" || timeEndValue == "" || detailElement.querySelector(
+                            '.location').value == "" || detailElement.querySelector('.description').value ==
+                        "") {
+                        Swal.fire('Error', 'Please fill in all the fields!', 'error');
+                        return;
+                    }
                     var orderDetail = {
                         "staff_id": detailElement.querySelector('.location').value,
                         "description": detailElement.querySelector('.description').value,
@@ -1122,6 +1581,25 @@
                     // alert(JSON.stringify(jsonData));
                 }
 
+
+
+
+                //add order to table
+                // for (var i = 0; i < jsonData.length; i++) {
+                //     var order = jsonData[i];
+                //     // alert(JSON.stringify(order));
+                //     var rowNode = table.row.add([
+                //         order.staff_id,
+                //         order.time_start,
+                //         order.time_end,
+                //         order.description,
+
+                //         '<button type="button" class="btn btn-danger btn-sm deleteRow">Delete</button>'
+                //     ]).draw().node();
+                //     $(rowNode).attr('id', order.orderDetailsId);
+                // }
+
+
                 $.ajax({
                     url: "http://localhost:8086/event/add/multiple",
                     method: "POST",
@@ -1132,9 +1610,41 @@
                         Swal.fire('Success', 'Order added successfully!', 'success');
                         // reset the values in the form
 
+                        //get hidden-table-id val
+                        let curtableid = $('#hidden-table-id').val()
+                        // alert(curtableid);
+                        //add row to table with jsonData
+                        var table = $('#table' + curtableid).DataTable();
+
+                        //get response data
+                        // var newEvents = response.data;
+
+                        // for (var i = 0; i < newEvents.length; i++) {
+                        //     var event = newEvents[i];
+
+
+                        //     // alert(JSON.stringify(order));
+                        //     var rowNode = table.row.add([
+                        //         event.id,
+                        //         event.time_start,
+                        //         event.time_end,
+                        //         event.description,
+                        //         event.staff_id,
+
+                        //         '<button type="button" class="btn btn-danger delete-event" delete-id="' +
+                        //         event.id +
+                        //         '"><i class="fa fa-trash" aria-hidden="true"></i></button>'
+                        //     ]).draw().node();
+                        // }
+                        eventAdd();
+
+
 
 
                         $('#addEventModal').modal('hide');
+
+
+                        // eventRestart();
 
 
 
