@@ -213,6 +213,69 @@
     :focus-visible {
         outline: -webkit-focus-ring-color auto 0px;
     }
+
+    .form-add-staff{
+        background-color:#675347;
+        padding:3%;
+        border: solid 1px #cd9678;
+        margin-top: 3%;
+    }
+
+    .form-add-staff > h1{
+        font-family: 'Lobster', cursive;
+        color:#f9e7dd;
+    }
+
+    .form-control.input-staff {
+        background-color: transparent;
+        /* color: #cd9678; */
+        border: none;
+        border-bottom: solid 3px #cd9678;
+        border-radius: 0px;
+        color: #f9e7dd !important;
+    }
+
+    .form-control.input-staff:focus {
+        color: #f9e7dd !important;
+        background-color: transparent;
+        border-bottom: solid 3px #cd9678;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .form-add-staff > div > label{
+        font-family: 'Nunito', sans-serif;
+        color:#f9e7dd;
+    }
+
+    .btn.add-button {
+        background-color: #cd9678;
+        border-radius: 0px;
+        color: #f8f9fa;
+        transition: ease-in-out 0.5s;
+    }
+
+    .form-control.modal-edit {
+        border: solid 1.3px #6f4933;
+        color: #6f4933;
+    }
+
+    .form-control.modal-edit:focus {
+        color: #6f4933;
+        background-color: #fff;
+        border: solid 1.4px #6f4933;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .form-control.modal-edit:focus {
+        color: #6f4933;
+        background-color: #fff;
+        border: solid 1.4px #6f4933;
+        outline: 0;
+        box-shadow: none;
+    }
+
 </style>
 
 <body>
@@ -222,30 +285,30 @@
         <?php include 'navbar.php'; ?>
         <div class="container">
             <div align="center" style="margin-top:40px;">
-                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Add new Staff
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-plus" style="color:white;"></i> Add new Staff
                 </button>
             </div>
 
             <div class="collapse" id="collapseExample">
-                <div class="row" style="background-color: #ffffff57;backdrop-filter: blur(5px); color:white; margin-top:20px; padding:10px">
-                    <h1 style="text-align: center;">Add new Staff</h1>
+                <div class="row form-add-staff">
+                    <h1 style="text-align: center;">- Add new Staff -</h1>
 
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Name:</label>
-                        <input type="text" id="add-staff-name" class="form-control" name="description" required>
+                        <label for="description" class="form-label modal-edit">Name:</label>
+                        <input type="text" id="add-staff-name" class="form-control input-staff" name="description" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Email:</label>
-                        <input type="text" id="add-staff-email" class="form-control" name="description" required>
+                        <label for="description" class="form-label modal-edit">Email:</label>
+                        <input type="text" id="add-staff-email" class="form-control input-staff" name="description" required>
                     </div>
 
                     <!-- password -->
                     <div class="mb-3">
-                        <label for="description" class="form-label">Password:</label>
-                        <input type="password" id="add-staff-password" class="form-control" name="description" required>
+                        <label for="description" class="form-label modal-edit">Password:</label>
+                        <input type="password" id="add-staff-password" class="form-control input-staff" name="description" required>
                     </div>
 
 
@@ -286,7 +349,7 @@
                         </div>
                     </div> -->
                     <div align="center">
-                        <button type="submit" class="btn btn-primary" id="submitstaff">Submit</button>
+                        <button type="submit" class="btn add-button" id="submitstaff">Submit</button>
                     </div>
 
 
@@ -345,20 +408,20 @@
 
                     <form id="clientForm" class="">
                         <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label" disabled>Email address</label>
-                            <input type="email" class="form-control" id="staff-email" aria-describedby="emailHelp">
+                            <label for="exampleInputEmail1" class="form-label" disabled><b>Email address</b></label>
+                            <input type="email" class="form-control modal-edit" id="staff-email" aria-describedby="emailHelp">
                         </div>
 
                         <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="staff-name">
+                            <label for="exampleInputPassword1" class="form-label"><b>Name</b></label>
+                            <input type="text" class="form-control modal-edit" id="staff-name">
                         </div>
                         <!-- hidden form for setting id -->
                         <input type="hidden" id="staff-modal-id" value="">
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="edit-staff-submit">Submit</button>
                 </div>
             </div>
