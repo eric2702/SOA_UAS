@@ -689,7 +689,8 @@
                                         // alert(idorderdetailsArr);
                                         // alert(index);
                                         // alert(idorderdetailsArr[index]);
-                                        idorderdetails = idorderdetailsArr[index];
+                                        idorderdetails = idorderdetailsArr[
+                                            index];
 
                                         // Handle edit button click event here
                                         // You can access the corresponding order detail using the index
@@ -810,6 +811,7 @@
                                 headerRow.append('<th>End Time</th>');
                                 headerRow.append('<th>Description</th>');
                                 headerRow.append('<th>PIC Staff Name</th>');
+                                headerRow.append('<th>Actions</th>')
                                 // headerRow.append('<th>PIC Staff Email</th>')
 
                                 eventTableHeader.append(headerRow);
@@ -862,6 +864,114 @@
 
                                     staffNameDropdown.append(staffNameDropdown2);
                                     eventTableRow.append(staffNameDropdown);
+                                    var deleteTd = $('<td></td>');
+                                    var deleteButton = $(
+                                        '<button type="button" class="btn btn-danger delete-event" delete-id=' +
+                                        event.id +
+                                        '><i class="fa fa-trash" aria-hidden="true"></i></button>'
+                                    );
+                                    deleteTd.append(deleteButton);
+                                    eventTableRow.append(deleteTd);
+
+                                    deleteButton.click(function() {
+                                        var eventId = $(this).attr('delete-id');
+                                        var thisTableId = $(
+                                                this
+                                            )
+                                            .closest(
+                                                'table'
+                                            )
+                                            .attr(
+                                                'id'
+                                            )
+                                            .replace(
+                                                'table',
+                                                ''
+                                            );
+
+
+
+                                        //ajaax call to delete
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: "You won't be able to revert this!",
+                                            icon: 'warning',
+
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+
+                                            confirmButtonText: 'Yes, delete it!'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $.ajax({
+                                                    url: 'http://localhost:8086/event/delete/' +
+                                                        eventId,
+                                                    type: 'DELETE',
+                                                    contentType: "application/json",
+                                                    success: function(
+                                                        response
+                                                    ) {
+                                                        // remove the data from the datatable
+                                                        //get this button's table
+
+
+                                                        var table =
+                                                            $(
+                                                                '#table' +
+                                                                thisTableId
+                                                            )
+                                                            .DataTable();
+                                                        var row = $(
+                                                            '#' +
+                                                            eventId
+                                                        );
+                                                        table.row(
+                                                                row)
+                                                            .remove()
+                                                            .draw();
+
+
+                                                        console.log
+                                                        // Handle the success response
+                                                        var message =
+                                                            response
+                                                            .message;
+                                                        Swal.fire({
+                                                            title: 'Success!',
+                                                            text: message,
+                                                            icon: 'success',
+                                                            confirmButtonText: 'OK'
+                                                        })
+
+                                                    },
+                                                    error: function(
+                                                        xhr,
+                                                        textStatus,
+                                                        errorThrown
+                                                    ) {
+                                                        // Handle the error response
+                                                        var err =
+                                                            JSON
+                                                            .parse(
+                                                                xhr
+                                                                .responseText
+                                                            );
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Error',
+                                                            text: err
+                                                                .message
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        })
+                                    });
+
+
+
+
                                     eventTableBody.append(eventTableRow);
                                 }
 
@@ -980,6 +1090,7 @@
             }
 
 
+
             $('#addEventButton').click(function() {
 
                 $('#addEventModal').modal('show');
@@ -1062,6 +1173,10 @@
                 table += '</table>';
                 return table;
             }
+
+
+
+
         });
     </script>
 

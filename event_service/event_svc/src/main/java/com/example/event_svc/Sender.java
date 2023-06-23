@@ -2,6 +2,7 @@ package com.example.event_svc;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +48,27 @@ public class Sender implements CommandLineRunner {
         System.out.println("Sending message...");
         rabbitTemplate.convertAndSend(topicExchangeName, "event.new", message);
         return "Message sent: " + message;
+    }
+
+    @DeleteMapping("/event/delete/{id}")
+    public ResponseEntity deleteEvent(@PathVariable Long id) {
+        if (eventService.deleteEventById(id)) {
+            ApiResponse apiResponse = new ApiResponse(true, "event deleted successfully", null);
+            // create a json containing the id of the deleted event
+            HashMap<String, Long> json = new HashMap<>();
+            json.put("id", id);
+            // convert json to string
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(json);
+                rabbitTemplate.convertAndSend(topicExchangeName, "event.deleted", jsonString);
+                return ResponseEntity.ok(apiResponse);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        ApiResponse apiResponse = new ApiResponse(false, "event not found", null);
+        return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @PostMapping("/event/add")

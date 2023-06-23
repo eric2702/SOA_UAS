@@ -374,6 +374,95 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
+        function refreshTable() {
+            $.ajax({
+                url: "http://localhost:8082/staff/list",
+                method: "GET",
+                success: function(response) {
+                    var clientList = response.data;
+
+                    // Clear the existing table body
+                    $("#orderListBody").empty();
+                    var table = $('#tableOrder').DataTable();
+                    table.destroy();
+
+
+                    // Loop through the clients and add them to the table
+                    for (var i = 0; i < clientList.length; i++) {
+                        var client = clientList[i];
+                        var row = $("<tr></tr>");
+
+                        row.append('<td>' + client.id + '</td>');
+                        row.append('<td>' + client.name + '</td>');
+                        row.append('<td>' + client.email + '</td>');
+                        // row.append(
+                        //     '<td><button class="btn btn-primary create-events" data-client-id="' +
+                        //     client.id + '">Create Events</button></td>'
+                        // );
+
+                        // Add the row to the table body
+                        row.append(
+                            '<td><button class="btn btn-primary edit-btn edit-staff" staff-id="' +
+                            client.id + '">Edit</button></td>'
+                        );
+
+
+                        $("#orderListBody").append(row);
+                    }
+
+                    var newTable = $('#tableOrder').DataTable({
+                        dom: 'lBfrtip',
+                        responsive: true,
+                        buttons: [{
+                                extend: 'copy',
+                                attr: {
+                                    class: 'btn btn-primary'
+                                }
+                            },
+                            {
+                                extend: 'csv',
+                                attr: {
+                                    class: 'btn btn-primary'
+                                }
+                            },
+                            {
+                                extend: 'excel',
+                                attr: {
+                                    class: 'btn btn-primary'
+                                }
+                            },
+                            {
+                                extend: 'pdf',
+                                attr: {
+                                    class: 'btn btn-primary'
+                                }
+                            },
+                            {
+                                extend: 'print',
+                                attr: {
+                                    class: 'btn btn-primary'
+                                }
+                            },
+                            {
+                                text: 'Edit',
+                                attr: {
+                                    id: 'editButton',
+                                    class: 'btn btn-primary'
+                                }
+                            }
+                        ],
+                        lengthMenu: [
+                            [5, 10, 25, 50, 100, -1],
+                            [5, 10, 25, 50, 100, "All"]
+                        ],
+                        pageLength: 10
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
         //if session storage is empty, redirect to login page
         if (sessionStorage.getItem("id") == null) {
             window.location.href = "http://localhost:81/index.php";
@@ -676,12 +765,12 @@
                     data: JSON.stringify(jsonData),
                     contentType: "application/json",
                     success: function(response) {
-
+                        refreshTable();
                         Swal.fire('Success', 'Staff added successfully!', 'success');
 
 
                     },
-                    error: function(error) {
+                    error: function(xhr, status, error) {
                         console.log(error);
                         var err = JSON.parse(xhr.responseText);
                         Swal.fire({

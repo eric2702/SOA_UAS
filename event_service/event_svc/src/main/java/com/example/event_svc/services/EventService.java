@@ -36,6 +36,14 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    public boolean deleteEventById(Long id) {
+        if (eventRepository.existsById(id)) {
+            eventRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
     // addMultipleEvents
     public List<Event> addMultipleEvents(List<Event> events) {
         return eventRepository.saveAll(events);

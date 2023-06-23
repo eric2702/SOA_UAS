@@ -74,6 +74,17 @@ public class Sender implements CommandLineRunner {
             return ResponseEntity.badRequest().body(response);
         }
 
+        // check if email is in email format
+        if (!client.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            ApiResponse response = new ApiResponse(false, "Please enter a valid email");
+            return ResponseEntity.badRequest().body(response);
+        }
+        // check if password is at least 8 characters long
+        if (client.getPassword().length() < 8) {
+            ApiResponse response = new ApiResponse(false, "Password must be at least 8 characters long");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         Client clientExists = clientRepository.findClientByEmail(client.getEmail());
         if (clientExists != null) {
             ApiResponse response = new ApiResponse(false, "Client already exists");

@@ -46,14 +46,43 @@ public class Receiver {
             // Upload the message to the client table
             uploadToClientTable(message);
         } else if (routingKey.startsWith("event.")) {
-            // Handle message with routing key starting with "client."
-            // Upload the message to the client table
-            uploadToEventTable(message);
+            if (routingKey.startsWith("event.deleted")) {
+                deleteFromEventTable(message);
+            } else {
+                // Handle message with routing key starting with "client."
+                // Upload the message to the client table
+                uploadToEventTable(message);
+            }
+
         } else {
             // Handle other scenarios or log an error
             System.out.println("Unsupported routing key: " + routingKey);
         }
         latch.countDown();
+
+    }
+
+    private void deleteFromEventTable(String message) {
+        // Implement your logic to upload the message to the staff table
+        System.out.println("Deleting from event table: " + message);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(message);
+
+            // Use the jsonNode object to perform operations on the JSON data
+            // For example, you can extract values using jsonNode.get("property")
+            // or iterate over the fields using jsonNode.fields()
+
+            // Perform your database upload operation here
+            Long id = jsonNode.get("id").asLong();
+            eventRepository.deleteById(id);
+            // Example: clientRepository.save(jsonNode);
+
+            System.out.println("Deleted event: " + jsonNode);
+        } catch (Exception e) {
+            // Handle the exception if JSON parsing or database operation fails
+            System.out.println("Failed to delete event: " + e.getMessage());
+        }
 
     }
 
