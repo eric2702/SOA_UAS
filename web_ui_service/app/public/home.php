@@ -473,7 +473,7 @@ tr {
 
         <div class="modal fade" id="orderDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
@@ -513,12 +513,58 @@ tr {
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     <script>
     //if session storage is empty, redirect to login page
     if (sessionStorage.getItem("id") == null) {
         window.location.href = "http://localhost/index.php";
     }
     $(document).ready(function() {
+        var staffArray = [];
+        $.ajax({
+            url: 'http://localhost:8082/staff/list',
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    var staffList = response.data;
+
+                    // Iterate over the staff list and extract ID and name
+                    for (var i = 0; i < staffList.length; i++) {
+                        var staff = staffList[i];
+                        var staffData = {
+                            id: staff.id,
+                            name: staff.name
+                        };
+
+                        // Push the staff data into the array
+                        staffArray.push(staffData);
+                        var selectLocation = $('.location');
+                        selectLocation.empty(); // Clear existing options
+
+                        // Add a hidden default option
+                        selectLocation.append(
+                            '<option value="" hidden>Select a PIC staff</option>');
+
+                        // Add staff names and IDs as options
+                        for (var j = 0; j < staffArray.length; j++) {
+                            var staffItem = staffArray[j];
+                            selectLocation.append('<option value="' + staffItem.id + '">' +
+                                staffItem.name + '</option>');
+                        }
+                    }
+
+                    // Print the staff array
+                    console.log(staffArray);
+                    // alert(staffArray[0].name);
+                } else {
+                    console.log('Failed to retrieve staff list.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('An error occurred while retrieving staff list.');
+            }
+        });
         $(document).on('click', '.removeRowBtn', function() {
             $(this).closest('.row').remove();
         });
@@ -526,6 +572,7 @@ tr {
 
         $(document).on('click', '.expand-details', function() {
             var orderID = $(this).html();
+            idorderdetailsArr = [];
 
 
             // AJAX request to retrieve order details
@@ -537,7 +584,7 @@ tr {
                         var orderDetails = response.data;
 
                         // Populate the modal with order details
-                        var modalBody = $('#eventsModal').find('.modal-body');
+                        var modalBody = $('#orderDetailsModal').find('.modal-body');
                         modalBody.empty();
 
                         // Create an accordion container
@@ -585,114 +632,16 @@ tr {
                             itemBody.append(row1);
 
 
-                            // Create a row for the edit button
-                            var row3 = $('<div class="row justify-content-center"></div>');
-                            var editButton = $(
-                                '<div class="col-md-4"><button style="width: 100%" id="' +
-                                detail.id +
-                                '" class="btn btn-primary btn-sm" type="button">Add Event</button></div>'
-                            );
-                            editButton.click((function(index) {
-                                return function() {
-                                    // Handle edit button click event here
-                                    // You can access the corresponding order detail using the index
-                                    $('#addEventModal').modal('show');
-                                    idorderdetails = detail.id;
-
-                                };
-                            })(i));
-                            row3.append(editButton);
 
 
-                            // Append the edit button row to the item body
-                            itemBody.append(row3);
-
-                            var row4 = $('<div class="row"></div>');
-                            var divEditButton = $('<div class="col-md-2"></div>');
-                            var editButton = $(
-                                '<button style="width: 100%" class="btn btn-primary btn-sm" id="buttonEdit-' +
-                                detail.id + '" type="button">Edit</button>'
-                            );
-                            editButton.click(function() {
-                                isEditing = !isEditing; // Toggle the edit state
-                                var inputElements = $('.editInput-' + this.id.split(
-                                    '-')[1]);
-                                // var inputElementsid = $('#editInputId').val();
-                                // alert(inputElementsid);
-                                var idIni = this.id.split('-')[1];
-
-                                if (isEditing) {
-                                    inputElements.removeAttr('disabled');
-                                    $(this).text('Save');
-                                } else {
-                                    inputElements.attr('disabled', 'disabled');
-                                    $(this).text('Edit');
-
-                                    var idEdit = [];
-                                    $('input[name="idEditVal-' + this.id.split('-')[
-                                        1] + '[]"]').each(function() {
-                                        var value = $(this).val();
-                                        idEdit.push(value);
-                                    });
-
-                                    var timeStartEdit = [];
-                                    $('input[name="timeStartEdit-' + this.id.split(
-                                        '-')[1] + '[]"]').each(function() {
-                                        var value = $(this).val();
-                                        timeStartEdit.push(value);
-                                    });
-
-                                    var timeEndEdit = [];
-                                    $('input[name="timeEndEdit-' + this.id.split(
-                                        '-')[1] + '[]"]').each(function() {
-                                        var value = $(this).val();
-                                        timeEndEdit.push(value);
-                                    });
-
-                                    var descriptionEditValues = [];
-                                    $('input[name="descriptionEdit-' + this.id
-                                        .split('-')[1] + '[]"]').each(
-                                        function() {
-                                            var value = $(this).val();
-                                            descriptionEditValues.push(value);
-                                        });
-                                    var staffNameEditValues = [];
-                                    $('select[name="staffNameEdit-' + this.id.split(
-                                        '-')[1] + '[]"]').each(function() {
-                                        var value = $(this).val();
-                                        staffNameEditValues.push(value);
-                                    });
 
 
-                                    var orderDetail = [];
 
-                                    for (var i = 0; i < idEdit.length; i++) {
-                                        var detail = {
-                                            "id": idEdit[i],
-                                            "time_start": formatTime(
-                                                timeStartEdit[i]),
-                                            "time_end": formatTime(timeEndEdit[
-                                                i]),
-                                            "description": descriptionEditValues[
-                                                i],
-                                            "staff_id": staffNameEditValues[i],
-                                            "orderDetailsId": idIni
-                                        };
-                                        orderDetail.push(detail);
-                                    }
 
-                                    // alert(JSON.stringify(orderDetail));\
-                                    saveData(JSON.stringify(orderDetail));
-
-                                }
-                            });
-                            divEditButton.append(editButton);
-                            row4.append(divEditButton);
 
 
 
                             // Append the edit button row to the item body
-                            itemBody.append(row4);
 
 
                             var eventRow = $('<div class="row"></div>');
@@ -812,7 +761,7 @@ tr {
                                 updateOrder(selectedData);
                             }
                         });
-                        $('#eventsModal').modal('show');
+                        $('#orderDetailsModal').modal('show');
 
 
 
@@ -927,10 +876,10 @@ tr {
                         modalBody.empty();
                         modalBody.append(
                             '<label for="description2" class="form-label"><b>Description:</b></label>'
-                            );
+                        );
                         modalBody.append(
                             '<input type="text" id="description2" class="form-control modal-edit mb-2" name="description" required>'
-                            );
+                        );
                         $('#description2').val(order.order.description);
 
 
@@ -944,7 +893,7 @@ tr {
                                 '<div class="col-md-3" style="display:none;">');
                             col0.append(
                                 '<label for="date" class="form-label"><b>id:</b></label>'
-                                );
+                            );
                             col0.append(
                                 '<input type="text" class="form-control modal-edit id" name="id[]" value="' +
                                 orderDetail.id + '" disabled>');
@@ -952,7 +901,7 @@ tr {
                             var col1 = $('<div class="col-md-3">');
                             col1.append(
                                 '<label for="date" class="form-label"><b>Date:</b></label>'
-                                );
+                            );
                             col1.append(
                                 '<input type="date" class="form-control modal-edit date" name="date[]" value="' +
                                 orderDetail.date + '" required>');
@@ -961,7 +910,7 @@ tr {
                             var col2 = $('<div class="col-md-3">');
                             col2.append(
                                 '<label for="timeStart" class="form-label"><b>Start Time:</b></label>'
-                                );
+                            );
                             col2.append(
                                 '<input type="time" class="form-control modal-edit timeStart" name="timeStart[]" value="' +
                                 orderDetail.time_start + '" required>');
@@ -970,7 +919,7 @@ tr {
                             var col3 = $('<div class="col-md-3">');
                             col3.append(
                                 '<label for="timeEnd" class="form-label"><b>End Time:</b></label>'
-                                );
+                            );
                             col3.append(
                                 '<input type="time" class="form-control modal-edit timeEnd" name="timeEnd[]" value="' +
                                 orderDetail.time_end + '" required>');
@@ -979,7 +928,7 @@ tr {
                             var col4 = $('<div class="col-md-3">');
                             col4.append(
                                 '<label for="location" class="form-label"><b>Location:</b></label>'
-                                );
+                            );
                             col4.append(
                                 '<input type="text" class="form-control modal-edit location" name="location[]" value="' +
                                 orderDetail.location + '" required>');
@@ -993,7 +942,7 @@ tr {
                         $('#EditorderDetailsModal').modal('show');
                         modalBody.append(
                             '<div align="center"><br><button type="button" class="btn edit-btn btn-primary" id="updateOrder">Update Order</button></div>'
-                            );
+                        );
 
                     }
                 },
