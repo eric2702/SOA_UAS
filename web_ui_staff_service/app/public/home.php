@@ -371,6 +371,7 @@
 
             var staffArray = [];
             var idorderdetails = 0;
+            var idorderdetailsArr = [];
 
             $.ajax({
                 url: 'http://localhost:8082/staff/list',
@@ -608,6 +609,7 @@
             //when click Order Details button in table get the order details from api 
             $(document).on('click', '.create-events', function() {
                 var orderID = $(this).data("order-id");
+                idorderdetailsArr = [];
 
 
                 // AJAX request to retrieve order details
@@ -669,22 +671,34 @@
 
                                 // Create a row for the edit button
                                 var row3 = $('<div class="row justify-content-center"></div>');
-                                var editButton = $(
-                                    '<div class="col-md-4"><button style="width: 100%" id="' +
-                                    detail.id +
-                                    '" class="btn btn-primary btn-sm" type="button">Add Event</button></div>'
+                                var addbutton = $(
+                                    '<div class="col-md-4"></div>'
                                 );
-                                editButton.click((function(index) {
+                                addButton2 = $(
+                                    '<button style="width: 100%" id="' +
+                                    detail.id +
+                                    '" class="btn btn-primary btn-sm" type="button">Add Event</button>'
+                                );
+                                addbutton.append(addButton2);
+                                addButton2.click((function(index) {
+
+                                    idorderdetailsArr.push(detail.id);
+
+
                                     return function() {
+                                        // alert(idorderdetailsArr);
+                                        // alert(index);
+                                        // alert(idorderdetailsArr[index]);
+                                        idorderdetails = idorderdetailsArr[index];
+
                                         // Handle edit button click event here
                                         // You can access the corresponding order detail using the index
                                         $('#addEventModal').modal('show');
-                                        idorderdetails = detail.id;
-                                        alert(idorderdetails);
+
 
                                     };
                                 })(i));
-                                row3.append(editButton);
+                                row3.append(addbutton);
 
 
                                 // Append the edit button row to the item body
@@ -975,6 +989,7 @@
                 event.preventDefault(); // Prevent the default form submission behavior
 
                 var jsonData = [];
+                // alert(idorderdetails);
                 var detailElements = document.getElementsByClassName('orderDetail');
                 for (var i = 0; i < detailElements.length; i++) {
                     var detailElement = detailElements[i];
