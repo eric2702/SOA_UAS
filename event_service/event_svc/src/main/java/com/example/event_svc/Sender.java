@@ -72,7 +72,16 @@ public class Sender implements CommandLineRunner {
     public ResponseEntity addMultipleEvents(@RequestBody List<Event> events) {
         System.out.println("Sending message...");
         // get max display order
-        int i = eventService.findByOrderDetailsId(events.get(0).getOrderDetailsId()) + 1;
+        System.out.println(events.get(0).getOrderDetailsId());
+        int i = 0;
+        try {
+            i = eventService.findByOrderDetailsId(events.get(0).getOrderDetailsId()) + 1;
+
+        } catch (Exception e) {
+            i = 0;
+        }
+        // if is null set to 0
+
         // check if event fields are empty
         for (Event event : events) {
             event.setDisplayOrder(Long.valueOf(i));
