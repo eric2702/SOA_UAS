@@ -840,6 +840,7 @@ tr {
                     console.log(response);
                     // Close the modal or perform any other actions
                     $('#EditorderDetailsModal').modal('hide');
+                    getDataList();
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -1051,9 +1052,11 @@ tr {
                     var orderList = response.data;
 
                     // Clear the existing table body
-                    $("#orderListBody").empty();
                     var table = $('#tableOrder').DataTable();
                     table.destroy();
+
+                    $("#orderListBody").empty();
+
 
                     // Loop through the orders and add them to the table
                     for (var i = 0; i < orderList.length; i++) {
