@@ -1640,7 +1640,10 @@
 
 
 
-
+                        //clear all input in div 
+                        $('#addEventModal').find('input').val('');
+                        //and clear select
+                        $('#addEventModal').find('select').val('');
                         $('#addEventModal').modal('hide');
 
 
