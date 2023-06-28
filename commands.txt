@@ -1,16 +1,16 @@
-AUTOMATIC
-Config for automatic:
+AUTOMATIC RUN
+1. Config for automatic deployment:
 chmod +x build-java.sh
 chmod +x run-containers.sh
 
-Automatic:
+2. Automatic deployment:
 ./build-java.sh
 ./run-containers.sh
 
 ==========================================================================
-MANUAL
-masuk ke setiap project spring boot and build the jar files with command:
+MANUAL RUN
+1. masuk ke setiap project spring boot and build the jar files with command:
 ./mvnw clean package -DskipTests
 
-terus di root folder:
-docker-compose -f docker-compose.yml up -d && docker compose -f client_service/docker-compose.yml up -d && docker compose -f staff_service/docker-compose.yml up -d && docker compose -f login_service/docker-compose.yml up -d && docker compose -f order_service/docker-compose.yml up -d && docker compose -f event_service/docker-compose.yml up -d && docker-compose -f web_ui_service/docker-compose.yml up -d --build
+2. terus di root folder:
+docker-compose -f docker-compose.yml up -d && docker compose -f client_service/docker-compose.yml up -d && docker compose -f staff_service/docker-compose.yml up -d && docker compose -f login_service/docker-compose.yml up -d && docker compose -f order_service/docker-compose.yml up -d && docker compose -f event_service/docker-compose.yml up -d && docker-compose -f web_ui_service/docker-compose.yml up -d --build && docker-compose -f web_ui_staff_service/docker-compose.yml up -d --build
